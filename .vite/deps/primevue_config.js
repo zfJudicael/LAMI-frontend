@@ -1,4 +1,7 @@
 import {
+  EventBus
+} from "./chunk-7IMIA7S2.js";
+import {
   getCurrentInstance,
   inject,
   nextTick,
@@ -80,38 +83,6 @@ function toKebabCase(str) {
 }
 function toTokenKey(str) {
   return isString(str) ? str.replace(/[A-Z]/g, (c, i) => i === 0 ? c : "." + c.toLowerCase()).toLowerCase() : str;
-}
-
-// node_modules/@primeuix/utils/eventbus/index.mjs
-function EventBus() {
-  const allHandlers = /* @__PURE__ */ new Map();
-  return {
-    on(type, handler2) {
-      let handlers = allHandlers.get(type);
-      if (!handlers) handlers = [handler2];
-      else handlers.push(handler2);
-      allHandlers.set(type, handlers);
-      return this;
-    },
-    off(type, handler2) {
-      let handlers = allHandlers.get(type);
-      if (handlers) {
-        handlers.splice(handlers.indexOf(handler2) >>> 0, 1);
-      }
-      return this;
-    },
-    emit(type, evt) {
-      let handlers = allHandlers.get(type);
-      if (handlers) {
-        handlers.slice().map((handler2) => {
-          handler2(evt);
-        });
-      }
-    },
-    clear() {
-      allHandlers.clear();
-    }
-  };
 }
 
 // node_modules/@primeuix/styled/index.mjs
