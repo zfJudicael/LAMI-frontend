@@ -1,8 +1,55 @@
 {
-  "hash": "a743f4e7",
+  "hash": "d1cc5d92",
   "configHash": "b736ae1f",
-  "lockfileHash": "e3b0c442",
-  "browserHash": "132f338f",
-  "optimized": {},
-  "chunks": {}
+  "lockfileHash": "087be4bb",
+  "browserHash": "bb88a5ea",
+  "optimized": {
+    "vue": {
+      "src": "../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "d2daf22b",
+      "needsInterop": false
+    },
+    "pinia": {
+      "src": "../../node_modules/pinia/dist/pinia.mjs",
+      "file": "pinia.js",
+      "fileHash": "3fb93aeb",
+      "needsInterop": false
+    },
+    "primevue/config": {
+      "src": "../../node_modules/primevue/config/index.mjs",
+      "file": "primevue_config.js",
+      "fileHash": "302cd180",
+      "needsInterop": false
+    },
+    "@primevue/themes/aura": {
+      "src": "../../node_modules/@primevue/themes/aura/index.mjs",
+      "file": "@primevue_themes_aura.js",
+      "fileHash": "8f63c812",
+      "needsInterop": false
+    },
+    "primevue/toastservice": {
+      "src": "../../node_modules/primevue/toastservice/index.mjs",
+      "file": "primevue_toastservice.js",
+      "fileHash": "f7cdb86e",
+      "needsInterop": false
+    },
+    "vue-router": {
+      "src": "../../node_modules/vue-router/dist/vue-router.mjs",
+      "file": "vue-router.js",
+      "fileHash": "277cd859",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-7IMIA7S2": {
+      "file": "chunk-7IMIA7S2.js"
+    },
+    "chunk-AYVSL3LM": {
+      "file": "chunk-AYVSL3LM.js"
+    },
+    "chunk-7H3D676B": {
+      "file": "chunk-7H3D676B.js"
+    }
+  }
 }
