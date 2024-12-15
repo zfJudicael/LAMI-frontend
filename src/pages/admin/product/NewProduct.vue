@@ -1,5 +1,6 @@
 <template>
     <div class="newProduct">
+        <BackButton />
         <h3>Ajout</h3>
         <form class="productForm" @submit.prevent="submitForm" @reset="resetForm">
             <div class="input">
@@ -72,14 +73,15 @@
 
             <div class="input">
                 <label for="technicalSpecification">Specification téchnique</label>
-                <InputText name="technicalSpecification" id="technicalSpecification" v-model="technicalSpecification" :invalid="errors.technicalSpecification ? true : false"/> 
+                <!-- <InputText name="technicalSpecification" id="technicalSpecification" v-model="technicalSpecification" :invalid="errors.technicalSpecification ? true : false"/>  -->
+                <Textarea name="technicalSpecification" id="technicalSpecification" v-model="technicalSpecification"/>
                 <small class="errorMessage">{{ errors.technicalSpecification }}</small>
             </div>
 
             <div class="input">
                 <label for="quantity">Quantité*</label>
-                <InputNumber name="quantity" id="quantity" v-model="quantity" :invalid="errors.quantity ? true : false"/> 
-                <small class="errorMessage">{{ errors.quantity }}</small>
+                <InputNumber name="quantity" id="quantity" v-model="availableQuantity" :invalid="errors.availableQuantity ? true : false"/> 
+                <small class="errorMessage">{{ errors.availableQuantity }}</small>
             </div>
 
             <div class="BTN">
@@ -109,6 +111,7 @@ import type { IType } from '@/models/Type';
 import { TypeService } from '@/modules/type/type.service';
 import { ProductService } from '@/modules/product/product.service';
 import { useToast } from 'primevue/usetoast';
+import BackButton from '@/components/BackButton.vue';
 
 const validationSchema = toTypedSchema(
     object({
@@ -133,10 +136,12 @@ const validationSchema = toTypedSchema(
                     .default([]),
         technicalSpecification: string()
                     .default(''),
-        quantity: number()
-                .required("Remplir le prix unitaire")
-                .default(0),
-        avaibility: boolean()
+        availableQuantity: number()
+                        .required("Remplir le nombre à stocké")
+                        .default(0),
+        reservedQuantity: number()
+                        .default(0),
+        availability: boolean()
                         .default(true),
         isPublished: boolean()
                         .default(false)
@@ -156,7 +161,7 @@ const { value: price} = useField('price');
 const { value: profilePicture } = useField('profilePicture');
 const { value: otherPictures } = useField('otherPictures');
 const { value: technicalSpecification } = useField('technicalSpecification');
-const { value: quantity } = useField('quantity');
+const { value: availableQuantity } = useField('availableQuantity');
 
 const selectedCategory = ref<ICategory>()
 const categoryList = ref<ICategory[]>([])
@@ -225,6 +230,7 @@ const submitForm = handleSubmit((values)=>{
             resetForm()
         })
         .catch((err)=>{
+            console.log(err)
             toast.add({ severity: 'error', summary: 'Ajout d\'un nouveau produit', detail: 'Echec de la requête', life: 3000 })
         })
 })

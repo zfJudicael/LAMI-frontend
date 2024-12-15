@@ -9,8 +9,9 @@ export interface IProduct{
     profilePicture: string;
     otherPictures: (string | undefined)[];
     technicalSpecification: string;
-    quantity: number;
-    avaibility: boolean;
+    availableQuantity: number,
+    reservedQuantity : number,
+    availability: boolean,
     isPublished: boolean;
 }
 
@@ -25,8 +26,9 @@ export class Product implements IProduct{
     profilePicture: string;
     otherPictures: (string | undefined)[];
     technicalSpecification: string;
-    quantity: number;
-    avaibility: boolean;
+    availableQuantity: number;
+    reservedQuantity : number;
+    availability: boolean;
     isPublished: boolean;
 
     constructor(params: IProduct){
@@ -40,8 +42,9 @@ export class Product implements IProduct{
         this.profilePicture = params.profilePicture;
         this.otherPictures = params.otherPictures;
         this.technicalSpecification = params.technicalSpecification;
-        this.quantity = params.quantity;
-        this.avaibility = params.avaibility;
+        this.availableQuantity = params.availableQuantity;
+        this.reservedQuantity = params.reservedQuantity;
+        this.availability = params.availability;
         this.isPublished = params.isPublished;
     }
 
@@ -51,9 +54,8 @@ export class Product implements IProduct{
 
     getOtherPicturesURL(){
         let URLs: string[] = []
-
         this.otherPictures.map((url)=>{
-            if(url) URLs.push(url)
+            if(url) URLs.push(`${import.meta.env.VITE_LAMI_API_URL}images/${url}`)
         })
 
         return URLs;

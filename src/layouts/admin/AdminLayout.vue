@@ -15,7 +15,7 @@
                 <li :class="{'active': isRouteStartWith('payment')}" @click="goTo('payment')">
                     <i class="pi pi-wallet  "></i>Payement
                 </li>
-                <li :class="{'active': isRouteStartWith('user')}" @click="goTo('user')">
+                <li v-if="useAuthStore().getUser?.role === Role.ADMIN" :class="{'active': isRouteStartWith('user')}" @click="goTo('user')">
                     <i class="pi pi-user"></i>Utilisateurs
                 </li>
             </ul>
@@ -41,6 +41,8 @@ import { goTo } from '../../use/useGoTo';
 import Avatar from 'primevue/avatar';
 import Popover from 'primevue/popover';
 import Toast from 'primevue/toast';
+import { useAuthStore } from '@/stores/auth.store';
+import { Role } from '@/models/User';
 
 const route = useRoute()
 const isRouteStartWith = (routeName: string)=>{
@@ -76,7 +78,6 @@ const handleResize = () => {
 }
 
 window.addEventListener('resize', handleResize)
-
 
 const op = useTemplateRef('op')
 

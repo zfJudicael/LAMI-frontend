@@ -1,9 +1,8 @@
 <template>
     <div class="product-page">
-        <Button label="Ajouter nouveau produit" icon="pi pi-plus-circle" iconPos="right" @click="goTo('newProduct')" rounded/>
+        <Button label="Ajouter nouveau" icon="pi pi-plus-circle" iconPos="right" @click="goTo('newProduct')" rounded/>
 
         <div class="card">
-            Liste des produits
             <div class="filter_product" >
                 <div>
                     <label for="name_categ">Catégorie : </label>
@@ -18,19 +17,22 @@
             <table class="product_table">
                 <thead>
                     <tr>
-                        <th>Identifiant</th>
-                        <th>Nom du produit</th>
-                        <th>Photo</th>
-                        <th>Marque</th>
-                        <th>Type</th>
-                        <th>Prix</th>
-                        <th>Quantité en stock</th>
-                        <th>En vente</th>
-                        <th>Plus de details</th>
+                        <th rowspan="2">Identifiant</th>
+                        <th rowspan="2">Nom du produit</th>
+                        <th rowspan="2">Photo</th>
+                        <th rowspan="2">Marque</th>
+                        <th rowspan="2">Type</th>
+                        <th rowspan="2">Prix</th>
+                        <th colspan="2">Quantité</th>
+                        <th rowspan="2">En vente</th>
+                        <th rowspan="2">Plus de details</th>
+                    </tr>
+                    <tr>
+                        <th>Disponible</th>
+                        <th>Réservée</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <template v-if="products.length > 0">
+                <tbody v-if="products.length > 0">
                         <tr v-for="product in products" class="product_data">
                             <td>{{ product.id }}</td>
                             <td>{{ product.name_product }}</td>
@@ -38,19 +40,19 @@
                             <td>{{ product.brand }}</td>
                             <td>{{ product.typeId }}</td>
                             <td>{{ product.price.toLocaleString("fr-FR") }} Ar</td>
-                            <td>{{ product.quantity }}</td>
+                            <td>{{ product.availableQuantity }}</td>
+                            <td>{{ product.reservedQuantity }}</td>
                             <td>
                                 <i v-if="product.isPublished" class="pi pi-check-circle" style="color: green;"></i>
                                 <i v-else class="pi pi-times" style="color: red;"></i>
                             </td>
                             <td>
-                                <Button icon="pi pi-book" size="small" rounded outlined @click="$router.push({name: 'productDetails', params: {id: product.id }})"></Button>
+                                <Button icon="pi pi-book" size="small" rounded outlined @click="router.push({name: 'productDetails', params: {id: product.id }})"></Button>
                             </td>
                         </tr>
-                    </template>
-                    <template v-else>
-                        A
-                    </template>
+                </tbody>
+                <tbody v-else>
+                    <tr>A</tr>
                 </tbody>
             </table>
         </div>
@@ -69,7 +71,9 @@ import type { ICategory } from '@/models/Category';
 import { CategoryService } from '@/modules/category/category.service';
 import type { IType } from '@/models/Type';
 import { TypeService } from '@/modules/type/type.service';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 const products = ref<Product[]>([])
 const categories = ref<ICategory[]>([{
     id: 'ALL',
@@ -167,11 +171,11 @@ const filterProducts = ()=>{
 }
 
 .product_table thead tr th{
-    padding: 10px;
+    padding: 5px;
 }
 
 .product_table tbody tr{
-  background-color: white;
+  background-color: white;  
 }
 
 .product_table tbody tr:hover{
