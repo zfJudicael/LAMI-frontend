@@ -1,6 +1,6 @@
 <template>
     <div class="navigation">
-        <Button @click="router.go(-1)">Retour</Button>
+        <Button @click="router.go(-1)" icon="pi pi-chevron-left" label="Retour" size="small"></Button>
     </div>
 </template>   
 

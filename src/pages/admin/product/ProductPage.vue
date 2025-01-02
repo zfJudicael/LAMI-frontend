@@ -1,6 +1,6 @@
 <template>
     <div class="product-page">
-        <Button label="Ajouter nouveau" icon="pi pi-plus-circle" iconPos="right" @click="goTo('newProduct')" rounded/>
+        <Button label="Ajouter nouveau" icon="pi pi-plus-circle" iconPos="right" @click="goTo('newProduct')" size="small" rounded/>
 
         <div class="card">
             <div class="filter_product" >
@@ -47,7 +47,7 @@
                                 <i v-else class="pi pi-times" style="color: red;"></i>
                             </td>
                             <td>
-                                <Button icon="pi pi-book" size="small" rounded outlined @click="router.push({name: 'productDetails', params: {id: product.id }})"></Button>
+                                <Button icon="pi pi-book" size="small" rounded outlined @click="router.push({name: 'productDetailsAdmin', params: {id: product.id }})"></Button>
                             </td>
                         </tr>
                 </tbody>
@@ -62,7 +62,6 @@
 <script setup lang="ts">
 import Button from 'primevue/button';
 import Select from 'primevue/select';
-import Badge from 'primevue/badge';
 import { goTo } from '@/use/useGoTo';
 import { onMounted, ref } from 'vue';
 import { Product } from '@/models/Product';

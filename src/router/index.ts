@@ -14,6 +14,9 @@ import PaymentPage from '@/pages/admin/payment/PaymentPage.vue';
 import UserPage from '@/pages/admin/user/UserPage.vue';
 import NewProduct from '@/pages/admin/product/NewProduct.vue';
 import NewUser from '@/pages/admin/user/NewUser.vue';
+import ProductDetails from '@/pages/main/product/ProductDetails.vue';
+import PackAdminPage from '@/pages/admin/pack/PackAdminPage.vue';
+import NewPack from '@/pages/admin/pack/NewPack.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +46,11 @@ const router = createRouter({
           component: NewsPage
         },
         {
+          path: '/product/client/details/:id',
+          name: 'productDetailsClient',
+          component: ProductDetails
+        },
+        {
           path: '/help',
           name: 'help',
           component: () => import('@/pages/main/help/HelpPage.vue')
@@ -65,37 +73,47 @@ const router = createRouter({
           component: AdminDashboard 
         },
         { 
-          path: '/product', 
+          path: '/admin/product', 
           name: 'product',
           component: ProductPage 
         },
         { 
-          path: '/product/new', 
+          path: '/admin/product/new', 
           name: 'newProduct',
           component: NewProduct 
         },
         {
-          path: '/product/details/:id',
-          name: 'productDetails',
+          path: '/admin/product/details/:id',
+          name: 'productDetailsAdmin',
           component: ()=> import('@/pages/admin/product/ProductView.vue')
         },
+        {
+          path: '/admin/pack',
+          name: 'packAdminPage',
+          component: PackAdminPage
+        },
+        {
+          path: '/admin/pack/new',
+          name: 'newPack',
+          component: NewPack
+        },
         { 
-          path: '/order', 
+          path: '/admin/order', 
           name: 'order',
           component: OrderPage 
         },
         { 
-          path: '/payment', 
+          path: '/admin/payment', 
           name: 'payment',
           component: PaymentPage 
         },
         { 
-          path: '/user', 
+          path: '/admin/user', 
           name: 'user',
           component: UserPage 
         },
         { 
-          path: '/user/new', 
+          path: '/admin/user/new', 
           name: 'newUser',
           component: NewUser 
         }

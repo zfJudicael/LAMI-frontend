@@ -73,8 +73,7 @@
 
             <div class="input">
                 <label for="technicalSpecification">Specification téchnique</label>
-                <!-- <InputText name="technicalSpecification" id="technicalSpecification" v-model="technicalSpecification" :invalid="errors.technicalSpecification ? true : false"/>  -->
-                <Textarea name="technicalSpecification" id="technicalSpecification" v-model="technicalSpecification"/>
+                <Textarea name="technicalSpecification" id="technicalSpecification" :value-change="console.log(technicalSpecification)" v-model="technicalSpecification"/>
                 <small class="errorMessage">{{ errors.technicalSpecification }}</small>
             </div>
 

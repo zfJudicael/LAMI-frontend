@@ -30,10 +30,11 @@
                     <i v-else class="pi pi-chevron-up"></i>
                 </div>
                 <ul v-if="showDropdown" class="dropdown">
-                    <li class="dropdown-item">Ordinateurs</li>
-                    <li class="dropdown-item">Portable</li>
-                    <li class="dropdown-item">Réseau</li>
-                    <li class="dropdown-item">Péripherique</li>
+                    <li class="dropdown-item" v-for="category in categoryList">
+                        <a :href="`#${category.id}`">
+                            {{ category.name_categ }}
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="menu_item" @click="goTo('pack')" :class="{ 'active' : isRouteStartWith('pack')}">
@@ -94,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { goTo } from '@/use/useGoTo';
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
@@ -108,6 +109,17 @@ import { AuthService } from '@/modules/auth/auth.services';
 import { toTypedSchema } from '@vee-validate/yup';
 import { object, string } from 'yup';
 import { useField, useForm } from 'vee-validate';
+import { CategoryService } from '@/modules/category/category.service';
+import type { ICategory } from '@/models/Category';
+
+const categoryList = ref<ICategory[]>([])
+onMounted(()=>{
+    CategoryService.getAll()
+        .then((res)=>{
+            categoryList.value = res
+        })
+        .catch((err)=>{})
+})
 
 const authStore = useAuthStore()
 
@@ -156,6 +168,20 @@ const onSubmit = handleSubmit((values)=>{
 </script>
 
 <style>
+/* .header{
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: #fff;
+}
+
+.topnav.hidden {
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+} */
+
 .header .top, .header .navbar{
     margin: 0;
 }

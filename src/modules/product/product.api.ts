@@ -15,8 +15,16 @@ export class ProductAPI{
         return lamiAPI.get(`/product/category/${params}`);
     }
 
+    static getPublishedByCategory(params: string): Promise<{data: IProductResponse}>{
+        return lamiAPI.get(`/product/category/published/${params}`);
+    }
+
     static getByType(params: string): Promise<{data: IProductResponse}>{
         return lamiAPI.get(`/product/type/${params}`);
+    }
+
+    static getPublishedByType(params: string): Promise<{data: IProductResponse}>{
+        return lamiAPI.get(`/product/type/published/${params}`);
     }
 
     static getAll(): Promise<{data: IProductResponse}>{

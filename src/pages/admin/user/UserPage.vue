@@ -1,6 +1,6 @@
 <template>
     <div class="user-page">
-        <Button label="Ajouter nouveau produit" icon="pi pi-plus-circle" iconPos="right" @click="goTo('newUser')" rounded/>
+        <Button label="Créer un compte pour personnel" icon="pi pi-plus-circle" iconPos="right" @click="goTo('newUser')" rounded size="small"/>
 
         <table class="user_table">
             <thead>

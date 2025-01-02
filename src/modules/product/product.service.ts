@@ -19,9 +19,17 @@ export class ProductService {
         return (await ProductAPI.getByCategory(categoryId)).data.data
     }
 
+    static async getPublishedByCategory(categoryId: string): Promise<IProduct[]>{
+        return (await ProductAPI.getPublishedByCategory(categoryId)).data.data
+    }
+
     static async getByType(typeId: string): Promise<IProduct[]>{
         return (await ProductAPI.getByType(typeId)).data.data
     }
+
+    static async getPublishedByType(typeId: string): Promise<IProduct[]>{
+        return (await ProductAPI.getPublishedByType(typeId)).data.data
+    }    
 
     static async editInformation(productId: number, params: Partial<IProduct>): Promise<IProduct>{
         return (await ProductAPI.editInformation(productId, params)).data.data[0]

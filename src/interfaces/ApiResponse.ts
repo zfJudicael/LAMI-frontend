@@ -1,4 +1,5 @@
 import type { ICategory } from "@/models/Category";
+import type { IPack } from "@/models/Pack";
 import type { IProduct } from "@/models/Product";
 import type { IType } from "@/models/Type";
 import type { IUser } from "@/models/User";
@@ -23,4 +24,8 @@ export interface IProductResponse extends IApiResponse{
 
 export interface IUserResponse extends IApiResponse{
     data: IUser[]
+}
+
+export interface IPackResponse extends IApiResponse{
+    data: IPack[]
 }
