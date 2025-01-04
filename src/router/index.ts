@@ -17,6 +17,8 @@ import NewUser from '@/pages/admin/user/NewUser.vue';
 import ProductDetails from '@/pages/main/product/ProductDetails.vue';
 import PackAdminPage from '@/pages/admin/pack/PackAdminPage.vue';
 import NewPack from '@/pages/admin/pack/NewPack.vue';
+import PromotionAdminPage from '@/pages/admin/promotion/PromotionAdminPage.vue';
+import NewPromotion from '@/pages/admin/promotion/NewPromotion.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -96,6 +98,16 @@ const router = createRouter({
           path: '/admin/pack/new',
           name: 'newPack',
           component: NewPack
+        },
+        {
+          path: '/admin/promotion',
+          name: 'promotionAdminPage',
+          component: PromotionAdminPage
+        },
+        {
+          path: 'admin/promotion/new',
+          name: 'newPromotion',
+          component: NewPromotion
         },
         { 
           path: '/admin/order', 

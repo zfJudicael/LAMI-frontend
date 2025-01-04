@@ -12,6 +12,9 @@
                 <li :class="{'active': isRouteStartWith('pack') || isRouteStartWith('newPack')}" @click="goTo('packAdminPage')">
                     <i class="pi pi-wrench"></i>Pack
                 </li>
+                <li :class="{'active': isRouteStartWith('promotion') || isRouteStartWith('newPromotion')}" @click="goTo('promotionAdminPage')">
+                    <i class="pi pi-percentage"></i>Promotion
+                </li>
                 <li :class="{'active': isRouteStartWith('order')}" @click="goTo('order')">
                     <i class="pi pi-credit-card"></i>Commande
                 </li>

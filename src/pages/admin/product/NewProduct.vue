@@ -101,7 +101,7 @@ import Textarea from 'primevue/textarea';
 import Button from 'primevue/button';
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload';
 import { toTypedSchema } from '@vee-validate/yup';
-import { object, string, number, ref as REF, boolean, array } from 'yup';
+import { object, string, number, boolean, array } from 'yup';
 import { useForm, useField } from 'vee-validate';
 import { onMounted, ref } from 'vue';
 import type { ICategory } from '@/models/Category';
@@ -229,7 +229,6 @@ const submitForm = handleSubmit((values)=>{
             resetForm()
         })
         .catch((err)=>{
-            console.log(err)
             toast.add({ severity: 'error', summary: 'Ajout d\'un nouveau produit', detail: 'Echec de la requête', life: 3000 })
         })
 })
