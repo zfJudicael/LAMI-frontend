@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import { AuthenticatedUser } from '@/models/User'
 import { AuthService } from '@/modules/auth/auth.services'
 import router from '@/router'
+import { useCartStore } from './cart.store'
+import { socket } from '@/socket'
 
 export const useAuthStore = defineStore('auth', {
   state: ()=>({
@@ -18,12 +20,18 @@ export const useAuthStore = defineStore('auth', {
         // router.push({name: 'home'})
       }
     },
-    redirect(){
+    async redirect(){
       if(this.user){
         router.push({name: this.user.handleRole()})
+        if(this.getUser?.role == 'CLIENT') await useCartStore().refreshMyCart()
+        else socket.connect()
       }else{
         router.push({name: 'home'})
       }
+    },
+    logOut(){
+      this.user = undefined
+      this.redirect()
     }
   },
   getters: {

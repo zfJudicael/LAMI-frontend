@@ -1,5 +1,6 @@
 <template>
     <div class="signUp">
+        <BackButton/>
         <form @submit.prevent="onSubmit" @reset="handleReset">
             <h3>Création d'un nouveau compte utilisateur</h3>
             <div class="group">
@@ -62,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+import BackButton from '@/components/BackButton.vue';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import InputText from 'primevue/inputtext';

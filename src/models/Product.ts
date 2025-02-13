@@ -1,3 +1,5 @@
+import type { IPromotionProduct } from "./Promotion";
+
 export interface IProduct{
     id?: number;
     name_product: string;
@@ -9,8 +11,10 @@ export interface IProduct{
     profilePicture: string;
     otherPictures: (string | undefined)[];
     technicalSpecification: string;
-    quantity: number;
-    avaibility: boolean;
+    availableQuantity: number,
+    reservedQuantity : number,
+    availability: boolean,
+    promotionProducts?: IPromotionProduct[],
     isPublished: boolean;
 }
 
@@ -25,8 +29,10 @@ export class Product implements IProduct{
     profilePicture: string;
     otherPictures: (string | undefined)[];
     technicalSpecification: string;
-    quantity: number;
-    avaibility: boolean;
+    availableQuantity: number;
+    reservedQuantity : number;
+    availability: boolean;
+    promotionProducts?: IPromotionProduct[];
     isPublished: boolean;
 
     constructor(params: IProduct){
@@ -40,8 +46,10 @@ export class Product implements IProduct{
         this.profilePicture = params.profilePicture;
         this.otherPictures = params.otherPictures;
         this.technicalSpecification = params.technicalSpecification;
-        this.quantity = params.quantity;
-        this.avaibility = params.avaibility;
+        this.availableQuantity = params.availableQuantity;
+        this.reservedQuantity = params.reservedQuantity;
+        this.availability = params.availability;
+        this.promotionProducts = params.promotionProducts;
         this.isPublished = params.isPublished;
     }
 
@@ -51,11 +59,32 @@ export class Product implements IProduct{
 
     getOtherPicturesURL(){
         let URLs: string[] = []
-
         this.otherPictures.map((url)=>{
-            if(url) URLs.push(url)
+            if(url) URLs.push(`${import.meta.env.VITE_LAMI_API_URL}images/${url}`)
         })
 
         return URLs;
+    }
+
+    getPrice(){
+        if(this.promotionProducts?.length){
+            if(this.promotionProducts[0].promotion) return this.price - (this.price * (this.promotionProducts[0].promotion?.discount / 100))
+            else return this.price
+        }else return this.price
+    }
+
+    getStockStatus(){
+       if(this.availableQuantity <= 0 ) return {
+        style: 'color: red;',
+        message: 'Rupture'
+       }
+       else if(this.availableQuantity <= 10) return {
+        style: 'color: orange;',
+        message: 'Critique'
+       }
+       else return {
+        style: 'color: #10B981;',
+        message: 'En stock'
+       }
     }
 }

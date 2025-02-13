@@ -9,13 +9,20 @@
                 <li :class="{'active': isRouteStartWith('product') || isRouteStartWith('newProduct') }" @click="goTo('product')">
                     <i class="pi pi-list"></i>Produits
                 </li>
-                <li :class="{'active': isRouteStartWith('order')}" @click="goTo('order')">
+                <li :class="{'active': isRouteStartWith('pack') || isRouteStartWith('newPack')}" @click="goTo('packAdminPage')">
+                    <i class="pi pi-wrench"></i>Pack
+                </li>
+                <li :class="{'active': isRouteStartWith('promotion') || isRouteStartWith('newPromotion')}" @click="goTo('promotionAdminPage')">
+                    <i class="pi pi-percentage"></i>Promotion
+                </li>
+                <li :class="{'active': isRouteStartWith('order')}" @click="goToOrder" style="display: flex; align-items: center;">
                     <i class="pi pi-credit-card"></i>Commande
+                    <Badge v-if="useNewOrderStore().getNewOrder > 0" severity="secondary" :value="useNewOrderStore().getNewOrder"></Badge>
                 </li>
-                <li :class="{'active': isRouteStartWith('payment')}" @click="goTo('payment')">
-                    <i class="pi pi-wallet  "></i>Payement
+                <li :class="{'active': isRouteStartWith('payment') || isRouteStartWith('refund')}" @click="goTo('payment')">
+                    <i class="pi pi-wallet  "></i>Paiement & Remboursement
                 </li>
-                <li :class="{'active': isRouteStartWith('user')}" @click="goTo('user')">
+                <li v-if="useAuthStore().getUser?.role === Role.ADMIN" :class="{'active': isRouteStartWith('user') || isRouteStartWith('newUser')}" @click="goTo('user')">
                     <i class="pi pi-user"></i>Utilisateurs
                 </li>
             </ul>
@@ -24,7 +31,11 @@
             <div class="topnav">
                 <Button icon="pi pi-bars" class="burger-button" severity="success" rounded aria-label="Burger-button" @click="openSidebar"/>
                 <Avatar icon="pi pi-user" size="large" shape="circle" @click="openPop"/>
-                <Popover ref="op"></Popover>
+                <Popover ref="op">
+                    <Button icon="pi pi-sign-out" class="flex-auto" severity="danger" size="small"
+                    @click="AuthService.logOut()"
+                ></Button>
+                </Popover>
             </div>
             <RouterView class="view"/>
         </div>
@@ -41,12 +52,21 @@ import { goTo } from '../../use/useGoTo';
 import Avatar from 'primevue/avatar';
 import Popover from 'primevue/popover';
 import Toast from 'primevue/toast';
+import Badge from 'primevue/badge';
+import { AuthService } from '@/modules/auth/auth.services';
+import { useAuthStore } from '@/stores/auth.store';
+import { useNewOrderStore } from '@/stores/newOrder.store';
+import { Role } from '@/models/User';
 
 const route = useRoute()
 const isRouteStartWith = (routeName: string)=>{
     return route.name?.toString().startsWith(routeName)
 }
 
+const goToOrder = ()=>{
+    useNewOrderStore().resetNewOrder()
+    goTo('order')
+}
 const sidebar= useTemplateRef('sidebar');
 const layoutMask = useTemplateRef('layout-mask');
 
@@ -76,7 +96,6 @@ const handleResize = () => {
 }
 
 window.addEventListener('resize', handleResize)
-
 
 const op = useTemplateRef('op')
 
@@ -179,6 +198,7 @@ const openPop = (event: Event)=>{
 
     .admin-layout .admin-content{
         flex-grow: 1;
+        width: 80%;
         height: 100vh;
         overflow-y: scroll;
     }

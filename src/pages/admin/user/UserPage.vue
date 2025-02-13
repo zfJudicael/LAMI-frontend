@@ -1,6 +1,6 @@
 <template>
     <div class="user-page">
-        <Button label="Ajouter nouveau produit" icon="pi pi-plus-circle" iconPos="right" @click="goTo('newUser')" rounded/>
+        <Button label="Créer un compte pour personnel" icon="pi pi-plus-circle" iconPos="right" @click="goTo('newUser')" rounded size="small"/>
 
         <table class="user_table">
             <thead>
@@ -19,7 +19,7 @@
                     <td>{{ user.name }}</td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.phoneNumber }}</td>
+                    <td>+261 {{ user.phoneNumber }}</td>
                     <td>{{ handleRole(user.role) }}</td>
                 </tr>
             </tbody>

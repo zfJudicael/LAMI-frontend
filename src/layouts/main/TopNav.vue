@@ -3,18 +3,18 @@
         <div class="top">
             <div class="logo" @click="goTo('home')"><img src="../../assets/logo_lami_png.png" alt="L'AMInformatique"></div>
             <div class="search">
-                <form>
+                <form @submit.prevent="searchProduct">
                     <InputGroup>
-                        <InputText placeholder="Que cherchez-vous?" />
-                        <Button icon="pi pi-search"/>
+                        <InputText placeholder="Que cherchez-vous?" v-model="searchInput"/>
+                        <Button type="submit" icon="pi pi-search"/>
                     </InputGroup>
                 </form>
             </div>
-            <div class="cart">
-                <Button label="Panier" icon="pi pi-shopping-cart" badge="50" badge-severity="info" severity="info" size="small" rounded outlined/>
+            <div v-if="authStore.getUser" class="cart">
+                <Button label="Panier" @click="$router.push({name: 'cartPage'})" icon="pi pi-shopping-cart" :badge="useCartStore().getLength.toString()" badge-severity="info" severity="info" size="small" rounded outlined/>
             </div>
             <div class="account">
-                <Button label="Compte" icon="pi pi-user" @click="showDialog = !showDialog" rounded severity="success" size="small" outlined/>
+                <Button label="Compte" icon="pi pi-user" @click="showDrawer = !showDrawer" rounded severity="success" size="small" outlined/>
             </div>
         </div>
       
@@ -30,10 +30,11 @@
                     <i v-else class="pi pi-chevron-up"></i>
                 </div>
                 <ul v-if="showDropdown" class="dropdown">
-                    <li class="dropdown-item">Ordinateurs</li>
-                    <li class="dropdown-item">Portable</li>
-                    <li class="dropdown-item">Réseau</li>
-                    <li class="dropdown-item">Péripherique</li>
+                    <li class="dropdown-item" v-for="category in categoryList">
+                        <a :href="`#${category.id}`">
+                            {{ category.name_categ }}
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="menu_item" @click="goTo('pack')" :class="{ 'active' : isRouteStartWith('pack')}">
@@ -55,10 +56,10 @@
         </ul>
     </div>
 
-    <Drawer v-model:visible="showDialog" position="right">
+    <Drawer v-model:visible="showDrawer" position="right">
         <div v-if="authStore.getUser" class="account" style="text-align: center; padding: 5px;">
             <div class="avatar">
-                <img src="../assets/img/defaultAvatar.png" width="100px" alt="defaultAvatar">
+                <img src="../../assets/img/defaultAvatar.png" width="100px" alt="defaultAvatar.png">
             </div>
             <p style="margin: 0; font-weight: bold;">{{ authStore.getUser.getFullName }}</p>
             <p style="margin: 0;">{{ authStore.getUser.email }}</p>
@@ -74,27 +75,28 @@
                 <div class="mb-3">
                     <label for="password" style="display: block;">Mots de passe</label>
                     <Password id="password" aria-labelledby="password" :feedback="false" toggle-mask v-model="password" :invalid="errors.password ? true : false"/>
-                    <small class="errorMessage">{{ errors.password }}</small>
+                    <small class="errorMessage" style="color: red;">{{ errors.password }}</small>
                 </div>
                 <div class="flex justify-end gap-2">
                     <Button type="submit" label="Confirmer" style="flex-grow: 1;"></Button>
                     <Button type="button" label="Effacer" severity="secondary" @click="handleReset"/>
                 </div>
             </form>
-            <p>Vous n'avez pas encore un compte? <RouterLink :to="{name: 'signUp'}" @click="showDialog = !showDialog">Cliquez ici</RouterLink></p>
+            <p>Vous n'avez pas encore un compte? <RouterLink :to="{name: 'signUp'}" @click="showDrawer = !showDrawer">Cliquez ici</RouterLink></p>
         </div>
         <template #footer v-if="authStore.getUser">
             <div class="flex items-center gap-2">
                 <Button label="Se deconnecter" icon="pi pi-sign-out" class="flex-auto" severity="danger" text
-                    @click="AuthService.logOut()"
+                    @click="logOut"
                 ></Button>
             </div>
         </template>
     </Drawer>
+
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { goTo } from '@/use/useGoTo';
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
@@ -102,24 +104,37 @@ import InputGroup from 'primevue/inputgroup';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import { useToast } from 'primevue/usetoast';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { AuthService } from '@/modules/auth/auth.services';
 import { toTypedSchema } from '@vee-validate/yup';
 import { object, string } from 'yup';
 import { useField, useForm } from 'vee-validate';
+import { CategoryService } from '@/modules/category/category.service';
+import type { ICategory } from '@/models/Category';
+import { useCartStore } from '@/stores/cart.store';
+
+const categoryList = ref<ICategory[]>([])
+onMounted(()=>{
+    CategoryService.getAll()
+        .then((res)=>{
+            categoryList.value = res
+        })
+        .catch((err)=>{})
+})
 
 const authStore = useAuthStore()
 
 const showDropdown = ref<boolean>(false);
 
 const route = useRoute();
+const router = useRouter()
 
 const isRouteStartWith = (routeName: string)=>{
     return route.name?.toString().startsWith(routeName)
 }
 
-const showDialog = ref<boolean>(false)
+const showDrawer = ref<boolean>(false)
 
 
 const validationSchema = toTypedSchema(
@@ -145,17 +160,50 @@ const onSubmit = handleSubmit((values)=>{
         password: values.password
     }).then(async (res)=>{
         toast.add({ severity: 'success', summary: 'Info Message', detail: 'Connexion effectuée', life: 3000 })
-        AuthService.setToken(res.access_token)
+        AuthService.setToken(res.data)
         handleReset()
         await useAuthStore().init()
+        showDrawer.value = false
         return useAuthStore().redirect()
     }).catch((err)=>{
         toast.add({ severity: 'error', summary: 'Info Message', detail: 'Connexion echouée', life: 3000 })
     })
 })
+
+
+const searchInput = ref<string>('')
+const searchProduct = ()=>{
+    router.push({
+        name: 'searchPage',
+        query: {
+            name_product: searchInput.value.toUpperCase()
+        }
+    })
+}
+
+const logOut = ()=>{
+    try {
+        AuthService.logOut()
+        showDrawer.value = false
+    } catch (error) {}
+}
 </script>
 
 <style>
+/* .header{
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: #fff;
+}
+
+.topnav.hidden {
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+} */
+
 .header .top, .header .navbar{
     margin: 0;
 }
