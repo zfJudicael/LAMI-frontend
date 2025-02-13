@@ -8,31 +8,43 @@ export class ProductAPI{
     }
 
     static getOne(id: number): Promise<{data: IProductResponse}>{
-        return lamiAPI.get(`/product/${id}`);
+        return lamiAPI.get(`/product/one/${id}`);
     }
 
     static getByCategory(params: string): Promise<{data: IProductResponse}>{
         return lamiAPI.get(`/product/category/${params}`);
     }
 
-    static getPublishedByCategory(params: string): Promise<{data: IProductResponse}>{
-        return lamiAPI.get(`/product/category/published/${params}`);
+    static getPublishedByCategory(categoryId: string, priceOrder: string): Promise<{data: IProductResponse}>{
+        return lamiAPI.get(`/product/category/published/${categoryId}/${priceOrder}`);
     }
 
-    static getByType(params: string): Promise<{data: IProductResponse}>{
-        return lamiAPI.get(`/product/type/${params}`);
+    static getByType(typeId: string): Promise<{data: IProductResponse}>{
+        return lamiAPI.get(`/product/type/${typeId}`);
     }
 
-    static getPublishedByType(params: string): Promise<{data: IProductResponse}>{
-        return lamiAPI.get(`/product/type/published/${params}`);
+    static getPublishedByType(params: string, priceOrder: string): Promise<{data: IProductResponse}>{
+        return lamiAPI.get(`/product/type/published/${params}/${priceOrder}`);
     }
 
     static getAll(): Promise<{data: IProductResponse}>{
-        return lamiAPI.get('/product');
+        return lamiAPI.get('/product/all');
+    }
+
+    static getLastUpdated(): Promise<{data: IProductResponse}>{
+        return lamiAPI.get('/product/lastUpdated');
+    }
+
+    static getByName(name_product: string): Promise<{data: IProductResponse}>{
+        return lamiAPI.get(`/product/nameProduct/${name_product}`);
     }
 
     static editInformation(id: number, payload: Partial<IProduct>): Promise<{data: IProductResponse}>{
         return lamiAPI.patch(`/product/information/${id}`, payload);
+    }
+
+    static editAvailableQuantity(id: number, payload: Partial<IProduct>): Promise<{data: IProductResponse}>{
+        return lamiAPI.patch(`/product/quantity/${id}`, payload);
     }
 
     static changeProfilePicture(id: number, payload: Partial<IProduct>): Promise<{data: IProductResponse}>{

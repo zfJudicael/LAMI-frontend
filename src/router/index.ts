@@ -17,6 +17,10 @@ import NewUser from '@/pages/admin/user/NewUser.vue';
 import ProductDetails from '@/pages/main/product/ProductDetails.vue';
 import PackAdminPage from '@/pages/admin/pack/PackAdminPage.vue';
 import NewPack from '@/pages/admin/pack/NewPack.vue';
+import PromotionAdminPage from '@/pages/admin/promotion/PromotionAdminPage.vue';
+import NewPromotion from '@/pages/admin/promotion/NewPromotion.vue';
+import RefundPage from '@/pages/admin/payment/RefundPage.vue';
+import SearchPage from '@/pages/main/search/SearchPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,6 +63,16 @@ const router = createRouter({
           path: '/signUp',
           name: 'signUp',
           component: () => import('@/pages/main/signUP/signUpPage.vue')
+        },
+        {
+          path: '/cart',
+          name: 'cartPage',
+          component: ()=> import('@/pages/main/cart/CartPage.vue')
+        },
+        {
+          path: '/search',
+          name: 'searchPage',
+          component: SearchPage
         }
       ]
     },
@@ -88,6 +102,11 @@ const router = createRouter({
           component: ()=> import('@/pages/admin/product/ProductView.vue')
         },
         {
+          path: '/admin/product/promotion/:productId',
+          name: 'newPromotionProduct',
+          component: ()=> import('@/pages/admin/product/NewPromotionProduct.vue')
+        },
+        {
           path: '/admin/pack',
           name: 'packAdminPage',
           component: PackAdminPage
@@ -97,15 +116,35 @@ const router = createRouter({
           name: 'newPack',
           component: NewPack
         },
+        {
+          path: '/admin/promotion',
+          name: 'promotionAdminPage',
+          component: PromotionAdminPage
+        },
+        {
+          path: 'admin/promotion/new',
+          name: 'newPromotion',
+          component: NewPromotion
+        },
         { 
           path: '/admin/order', 
           name: 'order',
           component: OrderPage 
         },
+        {
+          path: '/admin/order/:id',
+          name: 'orderDetails',
+          component: ()=> import('@/pages/admin/order/OrderDetails.vue')
+        },
         { 
           path: '/admin/payment', 
           name: 'payment',
           component: PaymentPage 
+        },
+        {
+          path: '/admin/refund',
+          name: 'refundPage',
+          component: RefundPage
         },
         { 
           path: '/admin/user', 

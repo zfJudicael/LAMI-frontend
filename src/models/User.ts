@@ -22,6 +22,7 @@ export interface IUserAuth{
     password: string
 }
 
+
 export interface IAuthenticatedUser{
     name: string;
     firstname?: string;

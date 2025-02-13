@@ -21,27 +21,30 @@
                         <Button @click="changeOtherPictureDialogVisibles = true">{{product.getOtherPicturesURL().length > 0 ? "Changer les autres photos" : "Ajouter"}}</Button>
                     </div>
                 </div>
-                <div style="padding: 40px;">
-                    <p>ID : {{ product.id }}</p>
-                    <p>Désignation du matériel : {{ product.name_product }}</p>
-                    <h3>Déscription</h3>
-                    <p>{{ product.description }}</p>
-                    <p>Marque : {{ product.brand }}</p>
-                    <p>Couleur disponible : {{ product.color }}</p>
-                    <p>Quantité :</p>
-                    <ul>
-                        <li>Disponible : {{ product.availableQuantity }}</li>
-                        <li>Reservée : {{ product.reservedQuantity }}</li>
-                    </ul>
-                    <p>Prix unitaire : {{ product.price.toLocaleString("fr-FR") }} Ariary</p>
-                    <h3>Spécification téchnique</h3>
-                    <p>{{ product.technicalSpecification }}</p>
-                    <div class="BTN">
-                        <Button @click="openEditInformationDialog">Modifier informations</Button>
-                        <Button severity="info" @click="confirmUpdatePublishStatus(!product.isPublished)">{{ product.isPublished ? 'Retirer de la vente' : 'Mettre en vente'}}</Button>
-                        <Button severity="danger" :disabled="product.availableQuantity > 0 || product.reservedQuantity > 0" @click="confirmDeleteProduct">Supprimer</Button>
-                    </div>
-                </div>
+                <Card style="padding: 10px; flex-grow: 2;">
+                    <template #content>
+                        <p>ID : {{ product.id }}</p>
+                        <p>Désignation du matériel : {{ product.name_product }}</p>
+                        <h3>Déscription</h3>
+                        <p>{{ product.description }}</p>
+                        <p>Marque : {{ product.brand }}</p>
+                        <p>Couleur disponible : {{ product.color }}</p>
+                        <p>Quantité :</p>
+                        <ul>
+                            <li>Disponible : {{ product.availableQuantity }}</li>
+                            <li>Reservée : {{ product.reservedQuantity }}</li>
+                        </ul>
+                        <p>Prix unitaire : {{ product.price.toLocaleString("fr-FR") }} Ariary</p>
+                        <h3>Spécification téchnique</h3>
+                        <p>{{ product.technicalSpecification }}</p>
+                        <div class="BTN">
+                            <Button @click="openEditInformationDialog">Modifier informations</Button>
+                            <Button severity="info" @click="confirmUpdatePublishStatus(!product.isPublished)">{{ product.isPublished ? 'Retirer de la vente' : 'Mettre en vente'}}</Button>
+                            <Button severity="contrast" outlined @click="$router.push({name: 'newPromotionProduct', params: {productId: product.id}})">Ajouter à une promotion</Button>
+                            <Button severity="danger" :disabled="product.availableQuantity > 0 || product.reservedQuantity > 0" @click="confirmDeleteProduct">Supprimer</Button>
+                        </div>
+                    </template>
+                </Card>
             </div>
 
             <Dialog v-model:visible="editInformationDialogVisible" modal header="Mettre à jour les informations":draggable="false" :style="{ width: '25rem' }">
@@ -79,12 +82,6 @@
                     <label for="technicalSpecification">Specification téchnique</label>
                     <Textarea name="technicalSpecification" id="technicalSpecification" v-model="technicalSpecification"/>
                     <small class="errorMessage">{{ errors.technicalSpecification }}</small>
-                </div>
-
-                <div class="input">
-                    <label for="quantity">Quantité*</label>
-                    <InputNumber name="quantity" id="quantity" v-model="availableQuantity" :invalid="errors.availableQuantity ? true : false"/> 
-                    <small class="errorMessage">{{ errors.availableQuantity }}</small>
                 </div>
 
                 <div class="BTN">
@@ -126,8 +123,8 @@
             </Dialog>
         </template>
         
+        <ConfirmDialog></ConfirmDialog>
     </div>
-    <ConfirmDialog></ConfirmDialog>
 </template>
 
 <script setup lang="ts">
@@ -137,11 +134,12 @@ import Carousel from 'primevue/carousel';
 import { onMounted, ref } from 'vue';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import Card from 'primevue/card';
 import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
 import Textarea from 'primevue/textarea';
 import { toTypedSchema } from '@vee-validate/yup';
-import { object, string, number, ref as REF, array } from 'yup';
+import { object, string, number, array } from 'yup';
 import { useForm, useField } from 'vee-validate';
 import { useToast } from 'primevue/usetoast';
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload';
@@ -173,7 +171,6 @@ const openEditInformationDialog = ()=>{
     typeId.value = product.value?.typeId
     price.value = product.value?.price
     technicalSpecification.value = product.value?.technicalSpecification
-    availableQuantity.value = product.value?.availableQuantity
 }
 
 const validationSchema = toTypedSchema(
@@ -194,10 +191,7 @@ const validationSchema = toTypedSchema(
                     .min(200, "La valeur est 200 Ar")
                     .required("Remplir le prix"),
         technicalSpecification: string()
-                    .default(''),
-        availableQuantity: number()
-                        .required("Remplir le nombre à stocké")
-                        .default(0)
+                    .default('')
     })
 )
 
@@ -212,7 +206,6 @@ const { value: color } = useField('color');
 const { value: typeId } = useField('typeId');
 const { value: price} = useField('price');
 const { value: technicalSpecification } = useField('technicalSpecification');
-const { value: availableQuantity } = useField('availableQuantity');
 
 const toast = useToast()
 const editInformation = handleSubmit((values)=>{

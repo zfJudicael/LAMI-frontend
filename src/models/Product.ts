@@ -1,3 +1,5 @@
+import type { IPromotionProduct } from "./Promotion";
+
 export interface IProduct{
     id?: number;
     name_product: string;
@@ -12,6 +14,7 @@ export interface IProduct{
     availableQuantity: number,
     reservedQuantity : number,
     availability: boolean,
+    promotionProducts?: IPromotionProduct[],
     isPublished: boolean;
 }
 
@@ -29,6 +32,7 @@ export class Product implements IProduct{
     availableQuantity: number;
     reservedQuantity : number;
     availability: boolean;
+    promotionProducts?: IPromotionProduct[];
     isPublished: boolean;
 
     constructor(params: IProduct){
@@ -45,6 +49,7 @@ export class Product implements IProduct{
         this.availableQuantity = params.availableQuantity;
         this.reservedQuantity = params.reservedQuantity;
         this.availability = params.availability;
+        this.promotionProducts = params.promotionProducts;
         this.isPublished = params.isPublished;
     }
 
@@ -59,5 +64,27 @@ export class Product implements IProduct{
         })
 
         return URLs;
+    }
+
+    getPrice(){
+        if(this.promotionProducts?.length){
+            if(this.promotionProducts[0].promotion) return this.price - (this.price * (this.promotionProducts[0].promotion?.discount / 100))
+            else return this.price
+        }else return this.price
+    }
+
+    getStockStatus(){
+       if(this.availableQuantity <= 0 ) return {
+        style: 'color: red;',
+        message: 'Rupture'
+       }
+       else if(this.availableQuantity <= 10) return {
+        style: 'color: orange;',
+        message: 'Critique'
+       }
+       else return {
+        style: 'color: #10B981;',
+        message: 'En stock'
+       }
     }
 }

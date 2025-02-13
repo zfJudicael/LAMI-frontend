@@ -1,5 +1,15 @@
+import type { IAuthenticatedUser } from "@/models/User"
+
 export interface IAuthResponse{
-    access_token: string
+    success: boolean,
+    message: string,
+    data: string
+}
+
+export interface IAuthenticatedUserResponse{
+    success: boolean,
+    message: string,
+    data: IAuthenticatedUser
 }
 
 export enum AuthERROR{

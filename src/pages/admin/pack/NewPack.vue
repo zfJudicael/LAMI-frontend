@@ -139,11 +139,12 @@ import InputNumber from 'primevue/inputnumber';
 import Dialog from 'primevue/dialog';
 import Badge from 'primevue/badge';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
-import type { IPack, IPackProduct } from '@/models/Pack';
+import type { IPack } from '@/models/Pack';
 import { Product } from '@/models/Product';
 import { ProductService } from '@/modules/product/product.service';
 import { PackService } from '@/modules/pack/pack.service';
 import { useToast } from 'primevue/usetoast';
+import { useRouter } from 'vue-router';
 
 const productList = ref<Product[]>([])
 const productListToShow = ref<Product[]>([])
@@ -173,7 +174,8 @@ const getProductById = (productId: number)=>{
 
 const newPack = reactive<IPack>({
     namePack: '',
-    pricePack: 0
+    pricePack: 0,
+    isPublished: false
 })
 
 const numberOfProductInPack = ref<number>(0)
@@ -252,6 +254,7 @@ const chooseProduct = (productId: number)=>{
                 packId: NaN,
                 quantity: 1
             }
+        selectProduct.value = false
     } catch (error) {}
 }
 
@@ -266,6 +269,7 @@ const totalPrice = computed(()=>{
 })
 
 const toast = useToast()
+const router = useRouter()
 const createPack = ()=>{
     if(isNaN(newPack.pricePack) || newPack.pricePack <= 0 ){
         pricePackError.value.status = true
@@ -275,6 +279,7 @@ const createPack = ()=>{
         PackService.create(newPack)
             .then((res)=>{
                 toast.add({ severity: 'success', summary: 'Ajout d\'un nouveau pack', detail: 'Requête effectuée avec succès', life: 3000 })
+                router.go(-1)
             })
             .catch((err)=>{
                 toast.add({ severity: 'error', summary: 'Ajout d\'un nouveau pack', detail: 'Echec de la requête', life: 3000 })

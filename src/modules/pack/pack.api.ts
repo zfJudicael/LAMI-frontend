@@ -7,11 +7,19 @@ export class PackAPI{
         return lamiAPI.post('/pack', payload);
     }
 
+    static update(id: number, payload: Partial<IPack>): Promise<{data: IPackResponse}>{
+        return lamiAPI.patch(`/pack/${id}`, payload)
+    }
+
     static getAll(): Promise<{data : IPackResponse}>{
         return lamiAPI.get('/pack');
     }
 
-    // static delete(id: number){
-    //     return lamiAPI.delete(`/pack/${id}`)
-    // }
+    static getPublishedPack(): Promise<{data: IPackResponse}>{
+        return lamiAPI.get('pack/published');
+    }
+
+    static delete(id: number): Promise<{data: IPackResponse}>{
+        return lamiAPI.delete(`/pack/${id}`)
+    }
 }

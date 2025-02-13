@@ -4,13 +4,14 @@ export interface IPack{
     id?: number,
     namePack: string,
     pricePack: number,
-    packProduct?: IPackProduct[]
+    packProduct?: IPackProduct[],
+    isPublished: boolean;
 }
 
 export interface IPackProduct{
     packId: number,
     productId: number,
     quantity: number,
-    pack?: IPack[],
-    product?: IProduct[]
+    pack?: IPack,
+    product?: IProduct
 }
