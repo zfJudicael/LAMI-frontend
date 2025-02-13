@@ -123,7 +123,7 @@ const onSubmit = handleSubmit((values)=>{
         role: Role.CLIENT
     }).then(async (res)=>{
         toast.add({ severity: 'success', summary: 'Info Message', detail: 'Message Content', life: 3000 })
-        AuthService.setToken(res.access_token)
+        AuthService.setToken(res.data)
         handleReset()
         await useAuthStore().init()
         return useAuthStore().redirect()

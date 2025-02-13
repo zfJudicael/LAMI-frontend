@@ -25,8 +25,8 @@
                     <small class="errorMessage">{{ errors.end_date }}</small>
                 </div>
                 <div class="BTN">
-                    <Button type="reset" severity="secondary" outlined>Effacer</Button>
                     <Button type="submit">Confirmer</Button>
+                    <Button type="reset" severity="secondary" outlined>Effacer</Button>
                 </div>
             </form>
         </div>
@@ -116,10 +116,10 @@ const onSubmit = handleSubmit((values)=>{
 }
 
 .newPromotion .promotionForm .BTN button:nth-child(1){
-    flex-grow: 1;
+    flex-grow: 2;
 }
 
 .newPromotion .promotionForm .BTN button:nth-child(2){
-    flex-grow: 2;
+    flex-grow: 1;
 }
 </style>

@@ -15,7 +15,7 @@ export class AuthService {
     }   
 
     static async getMe(): Promise<IAuthenticatedUser>{
-        return (await AuthApi.getMe()).data
+        return (await AuthApi.getMe()).data.data
     }
 
     static logOut(){

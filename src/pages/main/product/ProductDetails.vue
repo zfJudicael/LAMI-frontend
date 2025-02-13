@@ -42,7 +42,7 @@
                             </template>
                         </InputNumber>
                     </div>
-                    <Button type="submit" :disabled="quantity === 0">Ajouter au panier</Button>
+                    <Button type="submit" :disabled="quantity === 0" @click="addToCart">Ajouter au panier</Button>
                 </form>
             </div>
         </div>
@@ -58,15 +58,37 @@ import { ProductService } from '@/modules/product/product.service';
 import Button from 'primevue/button';
 import Carousel from 'primevue/carousel';
 import InputNumber from 'primevue/inputnumber';
+import { useToast } from 'primevue/usetoast';
+import { useCartStore } from '@/stores/cart.store';
+import { useAuthStore } from '@/stores/auth.store';
+
+const toast = useToast()
 
 const route = useRoute()
 const product = ref<Product>()
 onMounted(async ()=>{
     try {
         product.value = new Product(await ProductService.getOne(+route.params.id))
-        console.log(product.value)
     } catch (error) {}
 })
 
 const quantity = ref(0)
+
+const addToCart = ()=>{
+    if(useAuthStore().getUser){
+        useCartStore().addCartProduct({
+            productId: product.value?.id as number,
+            productQuantity: quantity.value
+        })
+        .then(()=> {
+            toast.add({ severity: 'success', summary: 'Succès', detail: 'Le matériel est ajouté au panier', life: 3000 })
+            quantity.value = 0 
+        })
+        .catch(()=>{
+            toast.add({ severity: 'error', summary: 'Echec', detail: 'Le matériel n\'est pas ajouté au panier', life: 3000 })
+        })
+    }else{
+        toast.add({ severity: 'info', summary: 'Action rejetée', detail: 'Veuillez vous connecter à votre compte', life: 3000 })
+    }
+}
 </script>

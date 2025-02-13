@@ -19,7 +19,7 @@
                     <td>{{ user.name }}</td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.phoneNumber }}</td>
+                    <td>+261 {{ user.phoneNumber }}</td>
                     <td>{{ handleRole(user.role) }}</td>
                 </tr>
             </tbody>

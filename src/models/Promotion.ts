@@ -12,7 +12,7 @@ export interface IPromotion{
 export interface IPromotionProduct{
     promotionId: number;
     productId: number;
-    applicationDate: Date;
+    application_date: Date;
     promotion?: IPromotion;
     product?: IProduct;
 }
