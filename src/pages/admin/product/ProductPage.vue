@@ -100,22 +100,26 @@ import { Product } from '@/models/Product';
 import { ProductService } from '@/modules/product/product.service';
 import type { ICategory } from '@/models/Category';
 import { CategoryService } from '@/modules/category/category.service';
-import type { IType } from '@/models/Type';
-import { TypeService } from '@/modules/type/type.service';
 import { useRouter } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
 
 const router = useRouter()
 const products = ref<Product[]>([])
 const categories = ref<ICategory[]>([{
-    id: 'ALL',
-    name_categ: 'Toutes catégories'
+    id: 0,
+    name_categ: 'Toutes catégories',
+    types: []
 }])
 
-const types = ref<IType[]>([])
+interface ICustom_types{
+    index: number,
+    name_type: string
+}
+
+const types = ref<ICustom_types[]>([])
 
 const selectedCategory = ref<ICategory>()
-const selectedTypes = ref<IType>()
+const selectedTypes = ref<ICustom_types>()
 
 const isFilterButtonDisabled = ref<boolean>(true)
 
@@ -142,16 +146,18 @@ const refreshCategoryList = ()=>{
 
 const refreshTypeList = ()=>{
     types.value = []
-    if(selectedCategory.value?.id && selectedCategory.value.id != 'ALL'){
-        TypeService.getByCategoryId(selectedCategory.value.id)
-            .then((val)=>{
-                types.value.push({
-                    id: 'ALL',
-                    name_type: 'Toutes types'
-                })
-                types.value = types.value.concat(val)
-                selectedTypes.value = types.value[0]
+    if(selectedCategory.value?.id && selectedCategory.value.id != 0){
+        types.value.push({
+            index: -1,
+            name_type: "Toutes types"
+        })
+        selectedCategory.value.types.forEach((type, index)=>{
+            types.value.push({
+                index: index,
+                name_type: type
             })
+        })
+        selectedTypes.value = types.value[0]
     }
 }
 
@@ -161,10 +167,10 @@ const onSelectCategory = ()=>{
 }
 
 const filterProducts = ()=>{
-    if(selectedCategory.value?.id == 'ALL'){
+    if(selectedCategory.value?.id == 0){
         refreshProductList()
     }else{
-        if(selectedTypes.value?.id == 'ALL'){
+        if(selectedTypes.value?.index && selectedTypes.value.index < 0){
             if(selectedCategory.value?.id) ProductService.getByCategory(selectedCategory.value.id).then((res)=>{
                 products.value = []
                 res.map((val)=>{
@@ -172,7 +178,10 @@ const filterProducts = ()=>{
                 })  
             })
         }else{
-            if(selectedTypes.value?.id) ProductService.getByType(selectedTypes.value.id).then((res)=>{
+            ProductService.getByType(
+                    selectedCategory.value?.id as number, 
+                    selectedTypes.value?.index as number
+            ).then((res)=>{
                 products.value = []
                 res.map((val)=>{
                     products.value.push(new Product(val))

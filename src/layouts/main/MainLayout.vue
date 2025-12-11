@@ -1,5 +1,5 @@
 <template>
-    <TopNav />
+    <TopNav/>
     <RouterView class="container"/>
     <Footer />
     <Toast position="bottom-left"/>

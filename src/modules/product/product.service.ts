@@ -15,20 +15,20 @@ export class ProductService {
         return (await ProductAPI.getAll()).data.data;
     }
 
-    static async getByCategory(categoryId: string): Promise<IProduct[]>{
+    static async getByCategory(categoryId: number): Promise<IProduct[]>{
         return (await ProductAPI.getByCategory(categoryId)).data.data
     }
 
-    static async getPublishedByCategory(categoryId: string, priceOrder: string): Promise<IProduct[]>{
+    static async getPublishedByCategory(categoryId: number, priceOrder: string): Promise<IProduct[]>{
         return (await ProductAPI.getPublishedByCategory(categoryId, priceOrder)).data.data
     }
 
-    static async getByType(typeId: string): Promise<IProduct[]>{
-        return (await ProductAPI.getByType(typeId)).data.data
+    static async getByType(categoryId: number , typeIndex: number): Promise<IProduct[]>{
+        return (await ProductAPI.getByType(categoryId, typeIndex)).data.data
     }
 
-    static async getPublishedByType(typeId: string, priceOrder: string): Promise<IProduct[]>{
-        return (await ProductAPI.getPublishedByType(typeId, priceOrder)).data.data
+    static async getPublishedByType(categoryId: number, typeIndex: number, priceOrder: string): Promise<IProduct[]>{
+        return (await ProductAPI.getPublishedByType(categoryId, typeIndex, priceOrder)).data.data
     }
     
     static async getLastUpdated(): Promise<IProduct[]>{

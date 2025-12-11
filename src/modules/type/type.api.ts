@@ -11,7 +11,7 @@ export class TypeAPI{
         return lamiAPI.get('/type');
     }
 
-    static getByCategoryId(payload: string): Promise<{data: ITypeResponse}>{
+    static getByCategoryId(payload: number): Promise<{data: ITypeResponse}>{
         return lamiAPI.get(`/type/${payload}`)
     }
 }

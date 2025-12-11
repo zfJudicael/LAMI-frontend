@@ -1,5 +1,6 @@
 <template>
     <div class="pack">
+        <!-- LOADING -->
         <template v-if="loadingPackList">
             <Card v-for="i in 2" class="pack-item">
                 <template #content>
@@ -32,6 +33,7 @@
         </template>
 
         <template v-else>
+            <!-- PACK NOT EMPTY -->
             <template v-if="packList.length > 0">
                 <Card v-for="(pack, packIndex) in packList" class="pack-item">
                     <template #content>
@@ -82,7 +84,10 @@
                     </template>
                 </Card>
             </template>
-            <div v-else>
+
+            <!-- PACK EMPTY -->
+            <div v-else style="text-align: center; padding-top: 40px; padding-bottom: 20px;">
+                <img :src="StaticFile.empty" alt="s" width="300px">
                 <p>Aucun pack disponible pour le moment</p>
                 <p>N'hesites pas à consulter régulièrement cette page pour ne pas en rater.</p>
             </div>
@@ -102,6 +107,7 @@ import InputNumber from 'primevue/inputnumber';
 import { useToast } from 'primevue/usetoast';
 import { useAuthStore } from '@/stores/auth.store';
 import Skeleton from 'primevue/skeleton';
+import { StaticFile } from '@/constants/staticfiles';
 
 
 const loadingPackList = ref<boolean>(false)

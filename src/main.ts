@@ -18,7 +18,10 @@ app.use(createPinia());
 app.use(router);
 app.use(Primevue, {
     theme: {
-        preset: Aura
+        preset: Aura,
+        options: {
+            darkModeSelector: ''
+        }
     }
 });
 app.use(ToastService);

@@ -25,9 +25,12 @@
                     <template #footer></template>
                 </Card>
             </div>
-            <div v-else style="margin-top: 20px; display: flex; justify-content: center; color: gray; align-items: center;">
-                <i class="pi pi-times"></i>
-                <p>Aucun article est trouvé</p>
+            <div v-else style="text-align: center;">
+                <img :src="StaticFile.file_search" alt="a" width="350px" style="margin-top: 20px;">
+                <div style="margin-top: 10px; display: flex; justify-content: center; color: gray; align-items: center;">
+                    <i class="pi pi-times"></i>
+                    <p>Aucun article est trouvé</p>
+                </div>
             </div>
         </div>
     </div>
@@ -41,6 +44,7 @@ import { ProductService } from '@/modules/product/product.service';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import ProductSkeleton from '@/components/skeleton/ProductSkeleton.vue';
+import { StaticFile } from '@/constants/staticfiles';
 
 const route = useRoute()
 const productList = ref<Product[]>([])

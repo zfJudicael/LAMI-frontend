@@ -10,10 +10,10 @@
 
             <div class="input radio_container">
                 <p>Type de produit</p>
-                <template v-if="typeList.length > 0">
-                    <div class="radio_button" v-for="typeItem in typeList">
-                        <RadioButton v-model="typeId" name="type" :inputId="typeItem.id" :value="typeItem.id" size="small"/>
-                        <label for="type">{{ typeItem.name_type }}</label>
+                <template v-if="selectedCategory && selectedCategory.types.length > 0">
+                    <div class="radio_button" v-for="(type, index) in selectedCategory.types">
+                        <RadioButton v-model="typeIndex" name="type" :inputId="index.toString()" :value="index" size="small"/>
+                        <label for="type">{{ type }}</label>
                     </div>
                 </template>
                 <template v-else>
@@ -21,7 +21,7 @@
                         Aucun type de produit définie dans cette catégorie. Veuillez ajouter pour en benificier d'avantage
                     </small>
                 </template>
-                <small class="errorMessage">{{ errors.typeId }}</small>
+                <small class="errorMessage">{{ errors.typeIndex }}</small>
             </div>
             <div class="input">
                 <label for="name_product">Nom du produit*</label>
@@ -122,9 +122,10 @@ const validationSchema = toTypedSchema(
                         .default(''),
         color: string()
                     .default(''),
-        typeId: string()
-                    .required('Choisir le type du produit est obligatoire')
-                    .default(''),
+        categoryId: number()
+                    .required(),
+        typeIndex: number()
+                    .required('Choisir le type du produit est obligatoire'),
         price: number()
                     .default(0)
                     .min(200, "La valeur est 200 Ar")
@@ -155,7 +156,8 @@ const { value: name_product } = useField('name_product');
 const { value: brand } = useField('brand');
 const { value: description } = useField('description');
 const { value: color } = useField('color');
-const { value: typeId } = useField('typeId');
+const { value: categoryId } = useField('categoryId');
+const { value: typeIndex } = useField('typeIndex');
 const { value: price} = useField('price');
 const { value: profilePicture } = useField('profilePicture');
 const { value: otherPictures } = useField('otherPictures');
@@ -181,6 +183,7 @@ onMounted(()=>{
 const typeList = ref<IType[]>([])
 
 const refreshTtypeList = async ()=>{
+    categoryId.value = selectedCategory.value?.id
     try {
         if(selectedCategory.value) typeList.value = await TypeService.getByCategoryId(selectedCategory.value.id)        
     } catch (error) {
@@ -223,7 +226,23 @@ const onOtherPicturesSelect = (event: FileUploadSelectEvent)=>{
 const toast = useToast();
 const submitForm = handleSubmit((values)=>{
     values.otherPictures = src.value
-    ProductService.create(values)
+    console.log(values)
+    ProductService.create({
+            name_product: values.name_product,
+            brand: values.brand,
+            description: values.description,
+            color: values.color,
+            categoryId: values.categoryId,
+            typeIndex: values.typeIndex,
+            price: values.price,
+            profilePicture: values.profilePicture,
+            otherPictures: values.otherPictures,
+            technicalSpecification: values.technicalSpecification,
+            availableQuantity: values.availableQuantity,
+            reservedQuantity: 0,
+            availability: values.availability,
+            isPublished: false
+        })
         .then((res)=>{
             toast.add({ severity: 'success', summary: 'Ajout d\'un nouveau produit', detail: 'Requête effectuée avec succès', life: 3000 })
             resetForm()

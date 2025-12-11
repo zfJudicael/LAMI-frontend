@@ -11,7 +11,7 @@ export class TypeService {
         return (await TypeAPI.getAll()).data.data;
     }
 
-    static async getByCategoryId(params: string): Promise<IType[]>{
+    static async getByCategoryId(params: number): Promise<IType[]>{
         return (await TypeAPI.getByCategoryId(params)).data.data
     }
 }

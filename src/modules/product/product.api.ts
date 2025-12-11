@@ -11,20 +11,20 @@ export class ProductAPI{
         return lamiAPI.get(`/product/one/${id}`);
     }
 
-    static getByCategory(params: string): Promise<{data: IProductResponse}>{
+    static getByCategory(params: number): Promise<{data: IProductResponse}>{
         return lamiAPI.get(`/product/category/${params}`);
     }
 
-    static getPublishedByCategory(categoryId: string, priceOrder: string): Promise<{data: IProductResponse}>{
+    static getPublishedByCategory(categoryId: number, priceOrder: string): Promise<{data: IProductResponse}>{
         return lamiAPI.get(`/product/category/published/${categoryId}/${priceOrder}`);
     }
 
-    static getByType(typeId: string): Promise<{data: IProductResponse}>{
-        return lamiAPI.get(`/product/type/${typeId}`);
+    static getByType(catgeoryId: number, typeIndex: number): Promise<{data: IProductResponse}>{
+        return lamiAPI.get(`/product/type/${catgeoryId}/${typeIndex}`);
     }
 
-    static getPublishedByType(params: string, priceOrder: string): Promise<{data: IProductResponse}>{
-        return lamiAPI.get(`/product/type/published/${params}/${priceOrder}`);
+    static getPublishedByType(categoryId: number, typeIndex: number, priceOrder: string): Promise<{data: IProductResponse}>{
+        return lamiAPI.get(`/product/type/published/${categoryId}/${typeIndex}/${priceOrder}`);
     }
 
     static getAll(): Promise<{data: IProductResponse}>{

@@ -1,7 +1,9 @@
 <template>
     <div class="header">
         <div class="top">
-            <div class="logo" @click="goTo('home')"><img src="../../assets/logo_lami_png.png" alt="L'AMInformatique"></div>
+            <div class="logo" @click="goTo('home')">
+                <img :src="StaticFile.logo" alt="L'AMInformatique">
+            </div>
             <div class="search">
                 <form @submit.prevent="searchProduct">
                     <InputGroup>
@@ -11,31 +13,39 @@
                 </form>
             </div>
             <div v-if="authStore.getUser" class="cart">
-                <Button label="Panier" @click="$router.push({name: 'cartPage'})" icon="pi pi-shopping-cart" :badge="useCartStore().getLength.toString()" badge-severity="info" severity="info" size="small" rounded outlined/>
+                <Button @click="$router.push({name: 'cartPage'})" severity="info" size="small" rounded outlined>
+                    <i class="pi pi-shopping-cart"></i>
+                    <span class="label">Panier</span>
+                    <Badge :value="useCartStore().getLength.toString()" severity="info"></Badge>
+                </Button>
             </div>
             <div class="account">
-                <Button label="Compte" icon="pi pi-user" @click="showDrawer = !showDrawer" rounded severity="success" size="small" outlined/>
+                <Button @click="showDrawer = !showDrawer" rounded severity="success" size="small" outlined>
+                    <i class="pi pi-user"></i>
+                    <span>Compte</span>
+                </Button>
             </div>
         </div>
+
+        <div class="burger_menu">
+            <Button icon="pi pi-bars" @click="toggleMenuDrawerVisibility"/>
+        </div>
       
-        <ul class="navbar menu">
-            <li class="burger-boutton">
-                <i class="pi pi-bars"></i>
-            </li>
-            <li class="dropdown_button">
-                <div class="menu_item" @click="showDropdown = !showDropdown" :class="{'active': isRouteStartWith('home')}">
+        <ul class="navbar">
+            <li class="dropdown_button" @click="goTo('home')">
+                <div class="menu_item" :class="{'active': isRouteStartWith('home')}">
                     <i class="pi pi-home"></i>
                     TOUS NOS PRODUITS
-                    <i v-if="!showDropdown" class="pi pi-chevron-down"></i>
-                    <i v-else class="pi pi-chevron-up"></i>
+                    <i class="pi pi-chevron-down chevron" ></i>
+
+                    <ul class="dropdown">
+                        <li class="dropdown-item" v-for="category in categoryList" @click="selectCategory(category.id)">
+                            <a>
+                                {{ category.name_categ }}
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <ul v-if="showDropdown" class="dropdown">
-                    <li class="dropdown-item" v-for="category in categoryList">
-                        <a :href="`#${category.id}`">
-                            {{ category.name_categ }}
-                        </a>
-                    </li>
-                </ul>
             </li>
             <li class="menu_item" @click="goTo('pack')" :class="{ 'active' : isRouteStartWith('pack')}">
                 <i class="pi pi-wrench"></i>
@@ -55,6 +65,31 @@
             </li>
         </ul>
     </div>
+
+    <Drawer v-model:visible="isMenuDrawerVisible" position="right" class="menuDrawer">
+        <ul>
+            <li @click="goTo('home').then(toggleMenuDrawerVisibility)" :class="{'active': isRouteStartWith('home')}">
+                <i class="pi pi-home"></i> 
+                <span>Tous nos produits</span>
+            </li>
+            <li @click="goTo('pack').then(toggleMenuDrawerVisibility)" :class="{ 'active' : isRouteStartWith('pack')}">
+                <i class="pi pi-wrench"></i>
+                <span>Pack matériels</span>
+            </li>
+            <li @click="goTo('promotion').then(toggleMenuDrawerVisibility)" :class="{'active': isRouteStartWith('promotion')}">
+                <i class="pi pi-sparkles"></i>
+                <span>Promotions</span>
+            </li>
+            <li @click="goTo('news').then(toggleMenuDrawerVisibility)" :class="{'active': isRouteStartWith('news')}">
+                <i class="pi pi-percentage"></i>
+                <span>Nouveautés</span>
+            </li>
+            <li @click="goTo('help').then(toggleMenuDrawerVisibility)" :class="{'active': isRouteStartWith('help')}">
+                <i class="pi pi-question"></i>
+                <span>Besoin d'aide</span>
+            </li>
+        </ul>
+    </Drawer>
 
     <Drawer v-model:visible="showDrawer" position="right">
         <div v-if="authStore.getUser" class="account" style="text-align: center; padding: 5px;">
@@ -96,9 +131,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { goTo } from '@/use/useGoTo';
 import Drawer from 'primevue/drawer';
+import Badge from 'primevue/badge';
 import Button from 'primevue/button';
 import InputGroup from 'primevue/inputgroup';
 import InputText from 'primevue/inputtext';
@@ -113,9 +149,11 @@ import { useField, useForm } from 'vee-validate';
 import { CategoryService } from '@/modules/category/category.service';
 import type { ICategory } from '@/models/Category';
 import { useCartStore } from '@/stores/cart.store';
+import { StaticFile } from '@/constants/staticfiles';
 
 const categoryList = ref<ICategory[]>([])
 onMounted(()=>{
+    window.addEventListener('scroll', handleScroll)
     CategoryService.getAll()
         .then((res)=>{
             categoryList.value = res
@@ -123,15 +161,55 @@ onMounted(()=>{
         .catch((err)=>{})
 })
 
-const authStore = useAuthStore()
+onUnmounted(()=>{
+    window.removeEventListener('scroll', handleScroll)
+})
 
-const showDropdown = ref<boolean>(false);
+const prevScrollPosition = ref<number>(window.scrollY)
+const handleScroll = ()=>{
+    let currentScrollPosition = window.scrollY
+    const header = document.getElementsByClassName('header')[0] as HTMLElement
+
+    if(prevScrollPosition.value > currentScrollPosition ){
+        if(currentScrollPosition >= header.offsetHeight){
+            header.style.position = "sticky"
+            header.style.top = '0px'
+        }else header.style.position = "static"
+    }else{
+        if(currentScrollPosition >= header.offsetHeight){
+            header.style.top = `-${header.offsetHeight}px`
+        }else header.style.position = "static"
+    }
+    prevScrollPosition.value = currentScrollPosition
+}
+
+const isMenuDrawerVisible = ref<boolean>(false)
+const toggleMenuDrawerVisibility = ()=>{
+    isMenuDrawerVisible.value = !isMenuDrawerVisible.value
+}
+
+const authStore = useAuthStore()
 
 const route = useRoute();
 const router = useRouter()
 
 const isRouteStartWith = (routeName: string)=>{
     return route.name?.toString().startsWith(routeName)
+}
+
+const selectCategory = async (categoryId: number)=>{
+    if(route.name != 'home') {
+        await router.push({ name: 'home'})
+        await nextTick()
+        
+        scrollToCategoty(categoryId)
+    }else scrollToCategoty(categoryId)
+       
+}
+
+const scrollToCategoty = (categoryId: number)=>{
+    const element = document.getElementById(categoryId.toString())
+    if(element) element.scrollIntoView({ behavior: 'smooth'})
 }
 
 const showDrawer = ref<boolean>(false)
@@ -189,212 +267,238 @@ const logOut = ()=>{
 }
 </script>
 
-<style>
-/* .header{
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 3;
-    background-color: #fff;
-}
+<style lang="scss">
+.header{
+    .top{
+        padding: 5px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: 1fr 1fr;
+        align-items: center;
+        text-align: center;
 
-.topnav.hidden {
-  opacity: 0;
-  transform: translateY(-100%);
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-} */
+        .logo{
+            grid-column: 1 / 3;
+            grid-row: 1;
 
-.header .top, .header .navbar{
-    margin: 0;
-}
+            img{
+                width: 90%;
+                max-height: 80px;
+            }
 
-/* 
-    Top
-*/
-.header .top{
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: 1fr auto;
-    align-items: center;
-    text-align: center;
-}
+            &:hover{
+                cursor: pointer;
+            }
+        }
 
-.header .logo{
-    grid-column: 1 / 3;
-    grid-row: 1;
-}
+        .search{
+            grid-column: span 5;
+            grid-row: 2;
+            padding: 0 15px;
+        }
 
-.header .logo img{
-    width: 100%;
-}
+        .cart{
+            grid-column: 4 / 5;
+            grid-row: 1;
+            display: flex;
+            justify-content: end;
+            padding-right: 5px;
 
-.header .block{
-    display: none;
-}
+            .label{
+                display: none;
+            }
+        }
 
-.header .cart{
-    grid-column: 4 / 5;
-    grid-row: 1;
-}
-
-.header .account{
-    grid-column: 5 / 6;
-    grid-row: 1;
-}
-
-.header .search{
-    grid-column: span 5;
-    grid-row: 2;
-    padding: 0 20px 0 20px;
-}
-
-.header .logo:hover{
-    cursor: pointer;
-}
-
-.search form > div{
-    border-radius: 50%;
-}
-
-.header .top{
-    margin-bottom: 5px;
-}
-
-.header .top  p {
-    margin: 0;
-}
-
-@media only screen and (min-width: 600px){
-    .header .top{
-        margin-bottom: 10px;
+        .account{
+            grid-column: 5 / 6;
+            grid-row: 1;
+        }
     }
-    
-    .header .logo img{
-        height: auto;
-        max-width: 50%; 
+
+    .burger_menu{
+        padding: 5px;
+        background-color: #6df7c8;
+    }
+
+    .navbar{
+        display: none;
+    }
+
+}
+
+.menuDrawer{
+    ul{
+        padding: 0;
+        li{
+            list-style: none;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+
+            &.active{
+                color: #10b981;
+            }
+        }
     }
 }
 
 @media only screen and (min-width: 786px){
-    .header .top{
-        grid-template-columns: repeat(12, 1fr);
-        grid-template-rows: 1fr;
-        margin: 0;
-    }
+    .header {
+        position: static;
+        top: 0;
+        z-index: 5;
+        background-color: white;
+        transition: all 1s ease;
 
-    .header .logo{
-        grid-column: 1 / 4;
-    }
+        .top{
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: 1fr;
+            
+            .logo {
+                grid-column: 1/3;
+                
+                img{
+                    height: auto;
+                    width: 100%; 
+                }
+            }
 
-    .header .logo img{
-        height: auto;
-        max-width: 65%; 
-    }
+            .search{
+                grid-column: 4/7;
+                grid-row: 1;
+            }
 
-    .header .search{
-        grid-column:  5 / 10;
-        grid-row: 1;
-    }
-    
-    .header .cart{
-        grid-column: 11 / 12;
-        text-align: center;
-    }
+            .cart{
+                grid-column: 7/8;
+            }
 
-    .header .account{
-        grid-column: 12 / 13;
-        text-align: center
+            .account{
+                grid-column: 8/9;
+            }
+        }
+
+        .burger_menu{
+            display: none;
+        }
+
+        .navbar{
+            background-color: #6df7c8;
+            list-style: none;
+            display: grid;
+            margin: 0;
+            padding: 0;
+            grid-template-columns: repeat(5, 1fr);
+
+            .dropdown_button{
+                position: relative;
+
+                .menu_item{
+
+                    .chevron{
+                        transition:all 0.4s ease-in-out;
+                    }
+
+                    .dropdown{
+                        overflow: hidden;
+                        max-height: 0;
+                        position: absolute;
+                        top: 100%;
+                        list-style: none;
+                        padding: 0;
+                        width: 100%;
+                        z-index: 2;
+                        transition: max-height 0.5s ease-in-out;
+
+                        
+                        .dropdown-item{
+                            width: 100%;
+                            padding: 10px 50px;
+                            background-color: #6df7c8;
+                            font-weight: normal;
+                            text-align: left;
+
+                            a{
+                                font-style: none;
+                                font-size:medium;
+                                color: black;
+                                text-decoration: none;
+                            }
+
+                            &:hover{
+                                background-color: #10b981;
+                                font-weight: bold;
+
+                                a{
+                                    color: white;
+                                }
+                            }
+
+                        }
+                    }
+
+                    &:hover{
+                        .chevron{
+                            rotate: 180deg;
+                        }
+
+                        .dropdown{
+                            max-height: 300px;
+                        }
+                    }
+                }
+
+
+            }
+            
+            .menu_item{
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+                transition: all 200ms ease;
+
+                &:hover , &.active{
+                    background-color: #10b981;
+                    color: white;
+                    font-weight: bolder;
+                    cursor: pointer;
+                }
+            }
+        }
     }
 }
 
+@media only screen and (min-width: 1024px){
+    .header {
+        .top{
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: 1fr;
+            
+            .logo {
+                grid-column: 1/3;
+                
+                img{
+                    height: auto;
+                    max-width: 100%; 
+                }
+            }
 
-/*********
-    navbar
-**********/ 
-.navbar{
-    background-color: #6df7c8;
-}
+            .search{
+                grid-column: 5/9;
+                grid-row: 1;
+            }
 
-.menu{
-    list-style: none;
-    display: grid;
-    padding-left: 0;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-}
+            .cart{
+                grid-column: 11/12;
+            }
 
-.menu .burger-boutton{
-    grid-row: 1;
-    grid-column: 1 / 3;
-    padding: 5px 5px 5px 15px;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 5px;
-}
-
-.menu .menu_item{
-    padding: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
-
-.menu .burger-boutton:hover, .menu .menu_item:hover, .dropdown .dropdown-item:hover, .menu .active{
-    background-color: #10b981;
-    color: white;
-    cursor: pointer;
-}
-
-.menu .dropdown_button{
-    position: relative;
-}
-
-.menu .dropdown{
-    position: absolute;
-    top: 100%;
-    list-style: none;
-    padding-left: 0;
-    right: 0;
-    z-index: 99;
-}
-
-.dropdown .dropdown-item{
-    padding: 10px;
-    background-color: #6df7c8;
-    text-align: left;
-}
-
-@media only screen and (min-width: 600px){
-    .menu{
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(2, 1fr);
+            .account{
+                grid-column: 12/13;
+            }
+        }
     }
-
-    .menu .burger-boutton{
-        display: none;
-    }
-
-    .menu .help{
-        grid-column: 4 / 5;
-    }
-}
-
-@media only screen and (min-width: 768px) {
-    .menu{
-        grid-template-columns: repeat(5, 1fr);
-        grid-template-rows: repeat(1, 1fr);
-    }
-
-    .menu .burger-boutton, .menu .menu_item{
-        padding: 15px;
-    }
-
-    .menu .help{
-        grid-column: 5 / 6;
-    }
-    
 }
 
 </style>

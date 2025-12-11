@@ -168,7 +168,7 @@ const openEditInformationDialog = ()=>{
     brand.value = product.value?.brand
     description.value = product.value?.description
     color.value = product.value?.color
-    typeId.value = product.value?.typeId
+    typeId.value = product.value?.typeIndex
     price.value = product.value?.price
     technicalSpecification.value = product.value?.technicalSpecification
 }

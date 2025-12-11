@@ -6,7 +6,8 @@ export interface IProduct{
     brand: string;
     description: string;
     color: string;
-    typeId: string;
+    categoryId: number;
+    typeIndex: number;
     price: number;
     profilePicture: string;
     otherPictures: (string | undefined)[];
@@ -24,7 +25,8 @@ export class Product implements IProduct{
     brand: string;
     description: string;
     color: string;
-    typeId: string;
+    categoryId: number;
+    typeIndex: number;
     price: number;
     profilePicture: string;
     otherPictures: (string | undefined)[];
@@ -41,7 +43,8 @@ export class Product implements IProduct{
         this.brand = params.brand;
         this.description = params.description;
         this.color = params.color;
-        this.typeId = params.typeId;
+        this.categoryId = params.categoryId;
+        this.typeIndex = params.typeIndex;
         this.price = params.price;
         this.profilePicture = params.profilePicture;
         this.otherPictures = params.otherPictures;

@@ -29,7 +29,8 @@
             </div>
         </template>
         <template v-else>
-            <div style="text-align: center;">
+            <div style="text-align: center; padding-top: 40px; padding-bottom: 20px;">
+                <img :src="StaticFile.empty" alt="s" width="300px">
                 <p>Aucune promotion est en cours pour le moment.</p>
                 <p>Consultez régulièrement cette page pour ne pas en rater.</p>
             </div>
@@ -45,6 +46,7 @@ import { PromotionService } from '@/modules/promotion/promotion.service';
 import type { IPromotion } from '@/models/Promotion';
 import { Product } from '@/models/Product';
 import { endIn } from '@/use/useEndIn';
+import { StaticFile } from '@/constants/staticfiles';
 
 interface IProductPromo {
     application_date: Date,
