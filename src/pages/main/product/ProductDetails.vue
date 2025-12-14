@@ -6,7 +6,10 @@
                 <div style="display: flex; justify-content: center;">
                     <img :src="product?.getProfileURL()" :alt="`${product?.name_product}.png`" width="300px">
                 </div>
-                <Carousel 
+
+                <Carousel :imgsURL="product?.getOtherPicturesURL()"/>
+
+                <!-- <Carousel 
                     class="otherPhotos"
                     :value="product?.getOtherPicturesURL()" 
                     :num-visible="1" 
@@ -16,7 +19,7 @@
                             <img :src="slotProps.data" alt="otherPics.png" width="200px" style="margin-left: auto; margin-right: auto;">
                         </div>
                     </template>
-                </Carousel>
+                </Carousel> -->
             </div>
             <div class="informations" style="grid-column: 3/6;">
                 <h2 style="text-align: center;">{{ product?.name_product }}</h2>
@@ -46,6 +49,7 @@
                 </form>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -53,10 +57,11 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import BackButton from '@/components/BackButton.vue';
+import Carousel from '@/components/Carousel.vue';
 import { Product } from '@/models/Product';
 import { ProductService } from '@/modules/product/product.service';
 import Button from 'primevue/button';
-import Carousel from 'primevue/carousel';
+// import Carousel from 'primevue/carousel';
 import InputNumber from 'primevue/inputnumber';
 import { useToast } from 'primevue/usetoast';
 import { useCartStore } from '@/stores/cart.store';

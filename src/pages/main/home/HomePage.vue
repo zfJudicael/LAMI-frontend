@@ -134,7 +134,7 @@ const loadProductList = async ()=>{
 
 
 const filterProductListByType = (productSectionIndex: number, categoryId: number, typeIndex: number)=>{
-    ProductService.getPublishedByType(categoryId, typeIndex,selectedPriceFilter.value.code)
+    ProductService.getPublishedByType(categoryId, typeIndex, selectedPriceFilter.value.code)
         .then((res)=>{
             ProductSection.value[productSectionIndex].products = []
             res.map((val)=>{
@@ -296,10 +296,11 @@ const refreshProductList = (index: number, categoryId: number)=>{
 
 @media screen and (min-width: 992px) {
     .home{
-
         .content{
-            .productContainer{
-                grid-template-columns: repeat( 5, 1fr); 
+            .productSection{
+                .productContainer{
+                    grid-template-columns: repeat( 5, 1fr); 
+                }
             }
         }
     }

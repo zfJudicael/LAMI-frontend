@@ -269,6 +269,8 @@ const logOut = ()=>{
 
 <style lang="scss">
 .header{
+    z-index: 5;
+    background-color: white;
     .top{
         padding: 5px;
         display: grid;
@@ -347,7 +349,6 @@ const logOut = ()=>{
     .header {
         position: static;
         top: 0;
-        z-index: 5;
         background-color: white;
         transition: all 1s ease;
 
