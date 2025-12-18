@@ -1,36 +1,35 @@
 <template>
     <div class="product_details">
         <BackButton />
-        <div style="display: grid; grid-template-columns: repeat(6, 1fr); padding: 5px;">
-            <div class="photos" style="grid-column: 1/3;">
-                <div style="display: flex; justify-content: center;">
-                    <img :src="product?.getProfileURL()" :alt="`${product?.name_product}.png`" width="300px">
+        <section>
+            <div class="photos">
+                <h2>{{ product?.name_product }}</h2>
+
+                <div class="presentation">
+                    <img :src="product?.getProfileURL()" :alt="`${product?.name_product}.png`">
                 </div>
-                <Carousel 
-                    class="otherPhotos"
-                    :value="product?.getOtherPicturesURL()" 
-                    :num-visible="1" 
-                    style="display: flex; justify-content: center;">
-                    <template #item="slotProps">
-                        <div>
-                            <img :src="slotProps.data" alt="otherPics.png" width="200px" style="margin-left: auto; margin-right: auto;">
-                        </div>
-                    </template>
-                </Carousel>
+
+                <Carousel :imgsURL="product?.getOtherPicturesURL()"
+                    :item-height-sm="300"
+                    :item-width-sm="300"
+                    :item-height-md="300"
+                    :item-width-md="300"
+                />
+            
             </div>
-            <div class="informations" style="grid-column: 3/6;">
-                <h2 style="text-align: center;">{{ product?.name_product }}</h2>
-                <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: inherit;">{{ product?.description }}</pre>
+            <div class="informations">
+                <h2>{{ product?.name_product }}</h2>
+                <pre>{{ product?.description }}</pre>
                 <h3>Information</h3>
                 <p>Marque : {{  product?.brand }}</p>
                 <p v-if="product?.color">Couleur disponible : {{ product?.color }}</p>
                 <p>Prix unitaire : {{ product?.price.toLocaleString('fr-FR') }} Ariary</p>
                 <p>Quantité disponible : {{ product?.availableQuantity }}</p>
                 <h3>Spécification technique</h3>
-                <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: inherit;">{{ product?.technicalSpecification }}</pre>
+                <pre>{{ product?.technicalSpecification }}</pre>
             </div>
-            <div class="order" style="grid-column: 6/7; display: flex; justify-content: center;">
-                <form @submit.prevent="" style="display: flex; flex-direction: column; justify-content: center; gap: 5px; text-align: center">
+            <div class="order">
+                <form @submit.prevent="">
                     <div>
                         <label for="quantity-input">Quantité à commander</label>
                         <InputNumber v-model="quantity" inputId="quantity-input" fluid :showButtons="true" button-layout="horizontal" :step="1" :max="product?.availableQuantity" :min="0">
@@ -45,7 +44,8 @@
                     <Button type="submit" :disabled="quantity === 0" @click="addToCart">Ajouter au panier</Button>
                 </form>
             </div>
-        </div>
+        </section>
+
     </div>
 </template>
 
@@ -53,10 +53,10 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import BackButton from '@/components/BackButton.vue';
+import Carousel from '@/components/Carousel.vue';
 import { Product } from '@/models/Product';
 import { ProductService } from '@/modules/product/product.service';
 import Button from 'primevue/button';
-import Carousel from 'primevue/carousel';
 import InputNumber from 'primevue/inputnumber';
 import { useToast } from 'primevue/usetoast';
 import { useCartStore } from '@/stores/cart.store';
@@ -92,3 +92,165 @@ const addToCart = ()=>{
     }
 }
 </script>
+
+<style lang="scss">
+.product_details{
+    section{
+        .photos{
+            h2{
+                text-align: center;
+            }
+
+            .presentation{
+                display: flex; 
+                justify-content: center;
+                margin-top: 10px;
+
+                img{
+                    width: 90%;
+                }
+            }
+        }
+
+        .informations{
+            h2{
+                text-align: center;
+            }
+
+            pre{
+                white-space: pre-wrap; 
+                word-wrap: break-word; 
+                font-family: inherit;
+            }
+        }
+
+        .order{
+            margin: 30px 0;
+            display: flex; 
+            justify-content: center;
+
+            form{
+                display: flex; 
+                flex-direction: column; 
+                gap: 5px; 
+                text-align: center;
+                width: 80%;
+
+                label{
+                    margin-bottom: 5px;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: 768px){
+    .product_details{
+        section{
+            display: grid; 
+            grid-template-columns: repeat(6, 1fr); 
+            padding: 5px;
+    
+            .photos{
+                grid-column: 1/4;
+
+                h2{
+                    display: none;
+                }
+    
+                .presentation{
+                    display: flex; 
+                    justify-content: center;
+    
+                    img{
+                        width: 300px;
+                    }
+                }
+            }
+    
+            .informations{
+                grid-column: 4/7;
+    
+                h2{
+                    text-align: center;
+                }
+    
+                pre{
+                    white-space: pre-wrap; 
+                    word-wrap: break-word; 
+                    font-family: inherit;
+                }
+            }
+    
+            .order{
+                grid-column: 3/5; 
+                grid-row: 2;
+                display: flex; 
+    
+                form{
+                    display: flex; 
+                    flex-direction: column; 
+                    gap: 5px; 
+                    text-align: center;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: 1024px){
+    .product_details{
+        section{
+            display: grid; 
+            grid-template-columns: repeat(6, 1fr); 
+            padding: 5px;
+    
+            .photos{
+                grid-column: 1/3;
+
+                h2{
+                    display: none;
+                }
+    
+                .presentation{
+                    display: flex; 
+                    justify-content: center;
+    
+                    img{
+                        width: 300px;
+                    }
+                }
+            }
+    
+            .informations{
+                grid-column: 3/6;
+    
+                h2{
+                    text-align: center;
+                }
+    
+                pre{
+                    white-space: pre-wrap; 
+                    word-wrap: break-word; 
+                    font-family: inherit;
+                }
+            }
+    
+            .order{
+                grid-column: 6/7; 
+                grid-row: 1;
+                display: flex; 
+    
+                form{
+                    display: flex; 
+                    flex-direction: column; 
+                    gap: 5px; 
+                    text-align: center
+                }
+            }
+        }
+    }
+}
+</style>
