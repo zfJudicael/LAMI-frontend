@@ -345,7 +345,7 @@ const logOut = ()=>{
     }
 }
 
-@media only screen and (min-width: 786px){
+@media only screen and (min-width: 768px){
     .header {
         position: static;
         top: 0;
