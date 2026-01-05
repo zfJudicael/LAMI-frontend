@@ -1,7 +1,7 @@
 <template>
     <Card class="product-item">
         <template #title>
-            <Skeleton style=""></Skeleton>
+            <Skeleton></Skeleton>
         </template>
         <template #content>
             <div style="position: relative;">

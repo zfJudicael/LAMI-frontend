@@ -28,25 +28,8 @@
                     <Chip label="Tout" @click="refreshProductList(productSectionIndex, productSection.category.id)" style="cursor: pointer;"></Chip>
                     <Chip v-for="(type, typeIndex) in productSection.category.types" :label="type" @click="filterProductListByType(productSectionIndex, productSection.category.id, typeIndex)" style="cursor: pointer; "></Chip>
                 </div>
-                <div class="productContainer">
-                    <Card  v-for=" product in productSection.products" class="product-item" @click="$router.push({name: 'productDetailsClient', params: { id: product.id }})">
-                        <template #title>
-                            <p class="name_product">{{ product.name_product }}</p>
-                        </template>
-                        <template #subtitle></template>
-                        <template #content>
-                            <div class="thumbnail">
-                                <p v-if="product.promotionProducts?.length" class="promo">Promo</p>
-                                
-                                <img class="img" :src="product.getProfileURL()" :alt="`${product.name_product}.png`">
-                                
-                                <s v-if="product.promotionProducts?.length" class="original_price">{{ product.price.toLocaleString() }} Ariary</s>
-                                <p class="price">{{ product.getPrice().toLocaleString('fr-FR') }} Ariary</p>
-                            </div>
-                        </template>
-                        <template #footer></template>
-                    </Card>
-                </div>
+                
+                <ProductContainer :products="productSection.products"/>
             </div>
         </div>
 
@@ -60,7 +43,7 @@ import { CategoryService } from '@/modules/category/category.service';
 import { ProductService } from '@/modules/product/product.service';
 import { onMounted, onUnmounted, ref } from 'vue';
 import Chip from 'primevue/chip';
-import Card from 'primevue/card';
+import ProductContainer from '@/components/ProductContainer/ProductContainer.vue';
 import Select from 'primevue/select';
 import ProductSkeleton from '@/components/skeleton/ProductSkeleton.vue';
 import Skeleton from 'primevue/skeleton';
