@@ -32,7 +32,23 @@ onMounted(() => {
     
     .container{
         flex: 1;
-        padding: 20px;
+        padding: 5px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .mainLayout{
+        .container{
+            padding: 10px;
+        }
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .mainLayout{
+        .container{
+            padding: 20px;
+        }
     }
 }
 </style>  
