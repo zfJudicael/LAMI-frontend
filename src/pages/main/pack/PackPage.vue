@@ -37,33 +37,27 @@
             <template v-if="packList.length > 0">
                 <Card v-for="(pack, packIndex) in packList" class="pack-item">
                     <template #content>
-                        <div style="display: grid; grid-template-columns: repeat(6, 1fr);">
-                            
-                            <div style="grid-column: 1/6;">
+                        <div class="content">
+                            <div class="details">
                                 <h1>{{ pack.namePack }}</h1>
-                                <p style="font-weight:bolder; font-size: larger;">Prix: {{ pack.pricePack.toLocaleString('fr-FR') }} Ar</p>
-                                <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap;">
-                                    <div v-for="(packProduct, index) in pack.product" style="display: flex;">
-                                        <p v-if="index !== 0" style="color: #0284C7; display: flex; align-items: center;"><i class="pi pi-plus"></i></p>
-                                        <div style="position: relative;">
-                                            <img :src="packProduct.product.getProfileURL()" :alt="`${packProduct.product.name_product}.png`" style="max-width: 300px;">
-                                            <p style="
-                                                color: white;
-                                                background-color: #0284C7;
-                                                position: absolute; 
-                                                padding: 5px;
-                                                top: 0; 
-                                                right: 0;
-                                                font-size: larger;
-                                                border-radius: 20px; 
-                                                z-index: 3;">X {{ packProduct.quantity }}</p>
-                                            <p style="text-align: center;" @click="$router.push({name: 'productDetailsClient', params: {id: packProduct.product.id}})" class="nameProduct">{{ packProduct.product.name_product }}</p>
+                                <p class="packprice">Prix: {{ pack.pricePack.toLocaleString('fr-FR') }} Ar</p>
+
+                                <div class="productList">
+                                    <div v-for="(packProduct, index) in pack.product" class="productItem">
+                                        <p v-if="index !== 0" class="plus">
+                                            <i class="pi pi-plus"></i>
+                                        </p>
+                                        <div class="image">
+                                            <img :src="packProduct.product.getProfileURL()" :alt="`${packProduct.product.name_product}.png`">
+                                            <p class="quantity">X {{ packProduct.quantity }}</p>
+                                            <p class="nameProduct" 
+                                                @click="$router.push({name: 'productDetailsClient', params: {id: packProduct.product.id}})" >{{ packProduct.product.name_product }}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
             
-                            <div class="order" style="grid-column: 6/7; display: flex; justify-content: center;">
+                            <div class="order">
                             <form @submit.prevent="" style="display: flex; flex-direction: column; justify-content: center; gap: 5px; text-align: center">
                                 <div>
                                     <label for="quantity-input">Quantité à commander</label>
@@ -181,18 +175,149 @@ const addToCart = (packId: number, index: number)=>{
 }
 </script>
 
-<style>
-.pack-item{
-    background-color: white; 
-    cursor: pointer;
-    margin: 10px;
+<style lang="scss">
+.pack{
+    .pack-item{
+        background-color: white; 
+        cursor: pointer;
+        margin: 10px;
+
+        &:hover{
+            box-shadow: 1px 1px 5px grey;
+        }
+
+        .content{
+            .details{
+
+                .packprice{
+                    font-weight:bolder; 
+                    font-size: larger;
+                }
+                
+                .productList{
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    flex-wrap: wrap;
+
+                    .productItem{
+                        display: flex;
+                        height: 200px;
+                        width: 200px;
+
+                        .plus{
+                            color: #0284C7; 
+                            display: flex; 
+                            align-items: center;
+                        }
+
+                        .image{
+                            position: relative;
+                            display: flex;
+                            flex-direction: column;
+
+                            img{
+                                width: 100%;
+                                height: 100%;
+                            }
+
+                            .quantity{
+                                color: white;
+                                background-color: #0284C7;
+                                position: absolute; 
+                                padding: 5px;
+                                top: 0; 
+                                right: 0;
+                                font-size: larger;
+                                border-radius: 20px; 
+                                z-index: 3;
+                            }
+
+                            .nameProduct{
+                                text-align: center;
+
+                                &:hover{
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+
+            .order{
+                margin: 0 auto;
+                width: 70%;
+                display: flex; 
+                justify-content: center;
+            }
+        }
+
+    }
 }
 
-.pack-item:hover{
-    box-shadow: 1px 1px 5px grey;
+@media screen and (min-width: 768px) {
+    .pack{
+        .pack-item{
+            .content{
+                .details{
+                    grid-column: 1/6;
+
+                    .packprice{
+                        font-weight:bolder; 
+                        font-size: larger;
+                    }
+                    
+                    .productList{
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        flex-wrap: wrap;
+
+                        .productItem{
+                            height: 280px;
+                            width: 280px;
+                        }
+                    }
+                    
+                }
+
+                .order{
+                    width: 300px;
+                }
+            }
+
+        }
+    }
 }
 
-.nameProduct:hover{
-    text-decoration: underline;
+@media screen and (min-width: 1024px) {
+    .pack{
+        .pack-item{
+
+            .content{
+                display: grid; 
+                grid-template-columns: repeat(6, 1fr);
+
+                .details{
+                    grid-column: 1/6;
+                    
+                    .productList{
+                        .productItem{
+                            height: 300px;
+                            width: 300px;
+                        }
+                    }
+                    
+                }
+
+                .order{
+                    grid-column: 6/7; 
+                }
+            }
+
+        }
+    }
 }
 </style>
