@@ -17,21 +17,16 @@
             <table class="product_table">
                 <thead>
                     <tr>
-                        <th rowspan="1">Identifiant</th>
-                        <th rowspan="1">Nom du produit</th>
-                        <th rowspan="1">Photo</th>
-                        <th rowspan="1">Marque</th>
-                        <!-- <th rowspan="1">Type</th> -->
-                        <th rowspan="1">Prix</th>
-                        <th rowspan="1">Etat de stock</th>
+                        <th>Identifiant</th>
+                        <th>Nom du produit</th>
+                        <th>Photo</th>
+                        <th>Marque</th>
+                        <th>Prix</th>
+                        <th>Etat de stock</th>
                         <th colspan="1">Quantité disponible</th>
-                        <th rowspan="1">En vente</th>
-                        <th rowspan="1">Plus de details</th>
+                        <th>En vente</th>
+                        <th>Plus de details</th>
                     </tr>
-                    <!-- <tr>
-                        <th>Disponible</th>
-                        <th>Réservée</th>
-                    </tr> -->
                 </thead>
                 <tbody v-if="products.length > 0">
                         <tr v-for="product in products" class="product_data">
@@ -39,7 +34,6 @@
                             <td>{{ product.name_product }}</td>
                             <td><img :src="product.getProfileURL()" :alt="`${product.name_product}.png`" style="width: 100px;"></td>
                             <td>{{ product.brand }}</td>
-                            <!-- <td>{{ product.typeId }}</td> -->
                             <td>{{ product.price.toLocaleString("fr-FR") }} Ar</td>
                             <td :style="product.getStockStatus().style">{{ product.getStockStatus().message }}</td>
                             <td>
@@ -53,7 +47,6 @@
                                     </div>
                                 </div>
                             </td>
-                            <!-- <td>{{ product.reservedQuantity }}</td> -->
                             <td>
                                 <i v-if="product.isPublished" class="pi pi-check-circle" style="color: green;"></i>
                                 <i v-else class="pi pi-times" style="color: red;"></i>
